@@ -9,7 +9,10 @@ import androidx.navigation.NavHostController
 import com.jaya.app.store.core.common.constants.Destination
 import com.jaya.app.store.core.utils.helper.NavigationIntent
 import com.jaya.app.store.navigation.screen_transition.AppScreenTransitions
+import com.jaya.app.store.presentation.ui.screens.Dashboard.DashBoardScreen
 import com.jaya.app.store.presentation.ui.screens.intro.SplashScreen
+import com.jaya.app.store.presentation.ui.screens.login.MobileNumberScreen
+import com.jaya.app.store.presentation.ui.screens.login.OtpScreen
 import com.jaya.app.store.presentation.ui.view_models.BaseViewModel
 import kotlinx.coroutines.channels.Channel
 
@@ -34,6 +37,20 @@ fun MainNavGraph(
 
         composable(destination = Destination.SplashScreen){
             SplashScreen()
+        }
+        composable(destination = Destination.MobileNumberScreen){
+            MobileNumberScreen()
+        }
+
+
+        composable(destination =  Destination.OtpScreen){
+            OtpScreen()
+        }
+
+
+
+        composable(destination =  Destination.DashBoardScreen){
+            DashBoardScreen()
         }
 
 

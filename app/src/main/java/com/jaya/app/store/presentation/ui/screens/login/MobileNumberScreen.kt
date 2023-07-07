@@ -32,7 +32,7 @@ fun  MobileNumberScreen(
         MobileScreenCoverSection()
 
         if (mobileViewModel.saveData.value){
-            (mobileViewModel)
+            OtpScreen(mobileViewModel)
 
         }else{
             MobileNumberInputSection(mobileViewModel)

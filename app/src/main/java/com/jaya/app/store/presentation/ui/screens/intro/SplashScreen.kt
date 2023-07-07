@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jaya.app.store.R
+import com.jaya.app.store.presentation.states.statusBarColor
 import com.jaya.app.store.presentation.ui.view_models.SplashViewModel
 
 @Composable
@@ -27,7 +28,8 @@ fun SplashScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xff4BB26D)),
+            .background(color = Color(0xff4BB26D))
+            .statusBarColor(color = Color(0xff4BB26D)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 
@@ -45,7 +47,7 @@ fun SplashScreen(
 private fun ColumnScope.SplashImageSection(@DrawableRes splash: Int) {
     Box(
         modifier = Modifier.weight(2f),
-        contentAlignment = Alignment.BottomEnd
+        contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painterResource(id = splash),
