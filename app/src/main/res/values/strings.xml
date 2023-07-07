@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">JayaStoreLatest</string>
+    <string name="version_update">Version Update</string>
+    <string name="update">Update App</string>
+    <string name="later">Later</string>
+    <string name="unable_to_open_play_store">Unable to open play store!!</string>
+
+    <string name="welcome">Welcome to Jaya Industries</string>
+    <string name="loginhere">Login here</string>
+    <string name="get_otp">Get OTP Verification</string>
+    <string name="verifyOtp">Please Verify your OTP</string>
+    <string name="verify">Verify</string>
+    <string name="resendOtp">Resend OTP</string>
+
+
+    <string name="dashboard">Dashboard</string>
+    <string name="logout">Logout</string>
+    <string name="todayStatus">Today Status</string>
+    <string name="mixing">Mixing Ingredients</string>
+    <string name="save">Save</string>
+</resources>
