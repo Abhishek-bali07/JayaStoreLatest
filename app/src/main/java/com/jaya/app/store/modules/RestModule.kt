@@ -5,6 +5,7 @@ import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jaya.app.store.data.sources.online.AppVersionApi
+import com.jaya.app.store.data.sources.online.DashboardApi
 import com.jaya.app.store.data.sources.online.MobileVerifyApi
 import com.jaya.app.store.data.sources.online.SendOtpApi
 import dagger.Module
@@ -58,6 +59,11 @@ object RestModule {
     @Singleton
     fun provideSendOtpApi(@ApplicationContext appContext: Context): SendOtpApi =
         provideApi(appContext, SendOtpApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDashboardApi(@ApplicationContext appContext: Context): DashboardApi =
+        provideApi(appContext, DashboardApi::class.java)
 
 
 

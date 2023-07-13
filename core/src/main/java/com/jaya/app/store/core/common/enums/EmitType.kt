@@ -8,10 +8,9 @@ enum class EmitType {
     Navigate,
     Loading,
     Inform,
-    ProductionItem,
-    ProductDetails,
-    IngredientAdded,
-    updateProduct,
-    ProductInfo,
+    StockItem,
+    TotalItem,
+    IssueItem,
+
 
 }

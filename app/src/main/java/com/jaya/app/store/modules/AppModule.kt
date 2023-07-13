@@ -3,9 +3,11 @@ package com.jaya.app.store.modules
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.preferencesDataStore
+import com.jaya.app.store.core.domain.repositories.DashboardRepository
 import com.jaya.app.store.core.domain.repositories.MobileRepository
 import com.jaya.app.store.core.domain.repositories.SplashRepository
 import com.jaya.app.store.core.utils.helper.AppStore
+import com.jaya.app.store.data.repositories.DashboardRepositoryImpl
 import com.jaya.app.store.data.repositories.MobileRepositoryImpl
 import com.jaya.app.store.data.repositories.SplashRepositoryImpl
 import com.jaya.app.store.utils.helper_impl.AppStoreImpl
@@ -42,5 +44,8 @@ interface AppModule {
 
     @Binds
     fun bindMobileRepository(MobileRepository : MobileRepositoryImpl) : MobileRepository
+
+    @Binds
+    fun bindDashboardRepository(DashboardRepository :DashboardRepositoryImpl) : DashboardRepository
 
 }
