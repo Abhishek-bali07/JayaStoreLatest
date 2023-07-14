@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.*
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jaya.app.store.application.JayaStore
@@ -30,6 +31,14 @@ fun Int.resourceString(): String {
 }
 
 
+
+@Composable
+fun Int.Text(style: TextStyle, modifier: Modifier = Modifier) =
+    androidx.compose.material.Text(
+        text = stringResource(id = this),
+        style = style,
+        modifier = modifier
+    )
 
 @Composable
 fun Int.Image(modifier: Modifier = Modifier, scale: ContentScale = ContentScale.Fit) =

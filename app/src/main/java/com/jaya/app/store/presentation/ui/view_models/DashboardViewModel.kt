@@ -12,19 +12,25 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.Navigation
 import com.jaya.app.store.core.common.constants.Destination
 import com.jaya.app.store.core.common.enums.EmitType
 import com.jaya.app.store.core.entities.Product
 import com.jaya.app.store.core.usecase.DashboardUseCase
 import com.jaya.app.store.core.utils.helper.AppNavigator
+import com.jaya.app.store.presentation.states.DrawerMenuItem
+import com.jaya.app.store.presentation.states.DrawerMenus
 import com.jaya.app.store.presentation.states.castListToRequiredTypes
 import com.jaya.app.store.presentation.states.castValueToRequiredTypes
 import com.jaya.app.store.utils.helper_impl.SavableMutableState
 import com.jaya.app.store.utils.helper_impl.UiData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -52,6 +58,13 @@ class DashboardViewModel @Inject constructor(
         savedStateHandle = savedStateHandle,
         initialData = false
     )
+
+
+
+    private val _drawerMenus = MutableStateFlow(DrawerMenus.values().map {
+        DrawerMenuItem(menu = it)
+    })
+    val drawerMenus = _drawerMenus.asStateFlow()
 
 
     val totalItem = mutableStateOf("")
@@ -107,7 +120,7 @@ class DashboardViewModel @Inject constructor(
 
     fun addProduct(){
      appNavigator.tryNavigateTo(
-         Destination.OtpScreen(),
+         Destination.AddProductScreen(),
          popUpToRoute = null,
          inclusive = false,
          isSingleTop = true
@@ -129,6 +142,47 @@ class DashboardViewModel @Inject constructor(
                 products.addAll(it)
             }
         }
+    }
+
+
+
+
+    fun onDrawerMenuClicked(index: Int, selected: DrawerMenuItem) {
+        _drawerMenus.update {
+            it.map { item ->
+                if (item == selected) {
+                    item.copy(selected = true)
+                } else item.copy(selected = false)
+            }
+        }
+        navigateToMenu(selected.menu)
+    }
+
+
+
+
+    private fun navigateToMenu(menu: DrawerMenus) {
+       /* when (menu) {
+
+
+            DrawerMenus.Logout -> {
+                useCases.logout().onEach {
+                    when (it.type) {
+                        EntryType.NAVIGATE -> {
+                            it.data?.castValueToRequiredTypes<Navigation>()?.apply {
+                                navigator.popAndNavigate(
+                                    destination = destination.toDestination(),
+                                    singleTop = singleTop,
+                                    inclusive = popUpto
+                                )
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }.launchIn(viewModelScope)
+            }
+        }*/
     }
 
 }

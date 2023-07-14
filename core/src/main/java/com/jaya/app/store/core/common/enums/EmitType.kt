@@ -11,6 +11,8 @@ enum class EmitType {
     StockItem,
     TotalItem,
     IssueItem,
+    VendorData,
+    stockData,
 
 
 }

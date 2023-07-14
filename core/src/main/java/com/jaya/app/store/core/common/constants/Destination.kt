@@ -18,6 +18,10 @@ sealed class Destination(
   operator fun invoke(): String = route
  }
 
+
+
+ object NONE : Destination("")
+
  object SplashScreen : Destination.NoArgumentsDestination(AppRoutes.SPLASH)
 
 
@@ -28,6 +32,11 @@ sealed class Destination(
 
 
  object OtpScreen : NoArgumentsDestination(AppRoutes.OTP)
+
+
+
+ object AddProductScreen: Destination.NoArgumentsDestination(AppRoutes.ADDPRODUCT)
+
 
 
 

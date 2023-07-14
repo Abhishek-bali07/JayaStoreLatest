@@ -10,6 +10,7 @@ import com.jaya.app.store.core.common.constants.Destination
 import com.jaya.app.store.core.utils.helper.NavigationIntent
 import com.jaya.app.store.navigation.screen_transition.AppScreenTransitions
 import com.jaya.app.store.presentation.ui.screens.Dashboard.DashBoardScreen
+import com.jaya.app.store.presentation.ui.screens.addProduct.AddProductScreen
 import com.jaya.app.store.presentation.ui.screens.intro.SplashScreen
 import com.jaya.app.store.presentation.ui.screens.login.MobileNumberScreen
 import com.jaya.app.store.presentation.ui.screens.login.OtpScreen
@@ -27,7 +28,7 @@ fun MainNavGraph(
     navHostController.NavEffects(navigationChannel)
     AppNavHost(
             navController = navHostController,
-            startDestination = Destination.SplashScreen,
+            startDestination = Destination.AddProductScreen,
             modifier = Modifier.padding(paddingValues),
             enterTransition = AppScreenTransitions.ScreenEnterTransition,
             popEnterTransition = AppScreenTransitions.ScreenPopEnterTransition,
@@ -52,6 +53,11 @@ fun MainNavGraph(
         composable(destination =  Destination.DashBoardScreen){
             DashBoardScreen()
         }
+
+        composable(destination =  Destination.AddProductScreen){
+            AddProductScreen()
+        }
+
 
 
     }

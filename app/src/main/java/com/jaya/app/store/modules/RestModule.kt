@@ -4,6 +4,7 @@ package com.jaya.app.store.modules
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.jaya.app.store.data.sources.online.AddProductApi
 import com.jaya.app.store.data.sources.online.AppVersionApi
 import com.jaya.app.store.data.sources.online.DashboardApi
 import com.jaya.app.store.data.sources.online.MobileVerifyApi
@@ -64,6 +65,13 @@ object RestModule {
     @Singleton
     fun provideDashboardApi(@ApplicationContext appContext: Context): DashboardApi =
         provideApi(appContext, DashboardApi::class.java)
+
+
+    @Provides
+    @Singleton
+    fun provideAddProductApi(@ApplicationContext appContext: Context): AddProductApi =
+        provideApi(appContext, AddProductApi::class.java)
+
 
 
 

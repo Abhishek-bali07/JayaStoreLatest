@@ -2,15 +2,15 @@ package com.jaya.app.store.presentation.ui.screens.Dashboard
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +39,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -75,7 +74,23 @@ import com.jaya.app.store.presentation.ui.view_models.DashboardViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import androidx.compose.material.*
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.text.font.FontStyle
+import com.jaya.app.store.presentation.states.DrawerMenuItem
+import com.jaya.app.store.presentation.states.DrawerMenus
 import com.jaya.app.store.presentation.states.Image
+import com.jaya.app.store.presentation.states.Text
+import com.jaya.app.store.presentation.states.screenWidth
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -88,177 +103,256 @@ fun DashBoardScreen(
         mutableStateOf(IntSize.Zero)
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        drawerContent = {SideBarContent(viewModel = viewModel)},
-        drawerScrimColor = Color.Black.copy(alpha = .5f),
-        drawerBackgroundColor = Color.White,
-        scaffoldState = viewModel.scaffoldState,
-        drawerGesturesEnabled = viewModel.drawerGuestureState.value,
-        topBar = { AppBarContent(viewModel) },
+    val dashboardDrawerState = androidx.compose.material3.rememberDrawerState(initialValue = DrawerValue.Closed)
+    val uiScope = rememberCoroutineScope()
+    ModalNavigationDrawer(
+        drawerContent = {
+            DashboardDrawerSection(
+                drawerMenus = viewModel.drawerMenus.collectAsState(),
+                onSelect = viewModel::onDrawerMenuClicked,
+                viewModel = viewModel,
+                closeDrawer = {
+                    uiScope.launch {
+                        when (dashboardDrawerState.currentValue) {
+                            DrawerValue.Closed -> {}
+                            DrawerValue.Open -> {
+                                dashboardDrawerState.animateTo(
+                                    targetValue = DrawerValue.Closed,
+                                    anim = tween(500)
+                                )
+                            }
+                        }
+                    }
+                })
+        }, drawerState = dashboardDrawerState
+    ){
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            drawerContent = {SideBarContent(viewModel = viewModel)},
+            drawerScrimColor = Color.Black.copy(alpha = .5f),
+            drawerBackgroundColor = Color.White,
+            scaffoldState = viewModel.scaffoldState,
+            drawerGesturesEnabled = viewModel.drawerGuestureState.value,
+            topBar = { AppBarContent(viewModel,dashboardDrawerState,uiScope) },
 
 
-    ) {paddingValues ->
-        if(viewModel.quotationsLoading){
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Box(
-                    modifier = Modifier.size(150.dp), contentAlignment = Alignment.Center
-                ) {
-                    Surface(modifier = Modifier.fillMaxSize(),
-                        shape = CircleShape,
-                        color = Color(0xFFF9F9F9),
-                        content = {})
-                    androidx.compose.material3.CircularProgressIndicator(
-                        color = Color.Red, modifier = Modifier.fillMaxSize()
-                    )
-                    R.drawable.jayalogo.Image(modifier = Modifier.size(100.dp))
-                }
-            }
-        }else {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.TopStart
-            ) {
+            ) {paddingValues ->
+            if(viewModel.quotationsLoading){
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 5.dp)
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .onGloballyPositioned {
-                                rowSize = it.size
-                            },
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Box(
+                        modifier = Modifier.size(150.dp), contentAlignment = Alignment.Center
                     ) {
-                        CardItem(
-                            name = R.string.totalItem,
-                            number = viewModel.totalItem.value,
-                            color = Color(0xffD62B2B),
-                            rowSize = rowSize
+                        Surface(modifier = Modifier.fillMaxSize(),
+                            shape = CircleShape,
+                            color = Color(0xFFF9F9F9),
+                            content = {})
+                        CircularProgressIndicator(
+                            color = Color.Red, modifier = Modifier.fillMaxSize()
                         )
-
-                        CardItem(
-                            name = R.string.itemIssued,
-                            number = viewModel.totalIssued.value,
-                            color = Color(0xff6A9E73),
-                            rowSize = rowSize
-                        )
+                        R.drawable.jayalogo.Image(modifier = Modifier.size(100.dp))
                     }
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 5.dp)
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .onGloballyPositioned {
-                                rowSize = it.size
-                            },
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Surface(modifier = Modifier
-                            .padding(10.dp)
-                            .size(width = 180.dp, height = 24.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(color = Color(0xffFFEB56)),
-                            onClick = {
-                                viewModel.addProduct()
-
-                            })
-                        {
-                            Row(
-                                modifier = Modifier.background(color = Color(0xffFFEB56)),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-
-                                Text(
-                                    modifier = Modifier.padding(
-                                        vertical = 3.dp, horizontal = 5.dp
-                                    ),
-                                    text = "Add Product",
-                                    style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold
-                                    ),
-                                )
-
-
-                                Icon(
-                                    modifier = Modifier,
-                                    painter = R.drawable.plus.resourceImage(),
-                                    contentDescription = "null", tint = Color.Black
-                                )
-                            }
-
-                        }
-
-                        Surface(modifier = Modifier
-                            .padding(10.dp)
-                            .size(width = 180.dp, height = 24.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(color = Color(0xffFFEB56)),
-                            onClick = {
-
-
-                            })
-                        {
-                            Row(
-                                modifier = Modifier.background(color = Color(0xffFFEB56)),
-                                horizontalArrangement = Arrangement.SpaceAround,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-
-                                Text(
-                                    modifier = Modifier.padding(
-                                        vertical = 3.dp, horizontal = 5.dp
-                                    ),
-                                    text = "Issue an item",
-                                    style = TextStyle(
-                                        color = Color.Black,
-                                        fontSize = 15.sp,
-                                        fontWeight = FontWeight.Bold
-                                    ),
-                                )
-
-
-                                Icon(
-                                    modifier = Modifier,
-                                    painter = R.drawable.plus.resourceImage(),
-                                    contentDescription = "null", tint = Color.Black
-                                )
-                            }
-
-                        }
-                    }
-
-                    StatusSection(viewModel)
-                    /*  Spacer(modifier = Modifier.height(10.dp))*/
-                    Divider(
-                        color = Color.LightGray, modifier = Modifier
-                            .fillMaxWidth()
-                            .width(1.dp)
-                    )
-
-                    FeatureSection(products = viewModel.products, viewModel)
-
                 }
+            }else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.TopStart
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 5.dp)
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .onGloballyPositioned {
+                                    rowSize = it.size
+                                },
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            CardItem(
+                                name = R.string.totalItem,
+                                number = viewModel.totalItem.value,
+                                color = Color(0xffD62B2B),
+                                rowSize = rowSize
+                            )
+
+                            CardItem(
+                                name = R.string.itemIssued,
+                                number = viewModel.totalIssued.value,
+                                color = Color(0xff6A9E73),
+                                rowSize = rowSize
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 5.dp)
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .onGloballyPositioned {
+                                    rowSize = it.size
+                                },
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(modifier = Modifier
+                                .padding(10.dp)
+                                .size(width = 180.dp, height = 24.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(color = Color(0xffFFEB56)),
+                                onClick = {
+                                    viewModel.addProduct()
+
+                                })
+                            {
+                                Row(
+                                    modifier = Modifier.background(color = Color(0xffFFEB56)),
+                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    Text(
+                                        modifier = Modifier.padding(
+                                            vertical = 3.dp, horizontal = 5.dp
+                                        ),
+                                        text = "Add Product",
+                                        style = TextStyle(
+                                            color = Color.Black,
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                    )
+
+
+                                    Icon(
+                                        modifier = Modifier,
+                                        painter = R.drawable.plus.resourceImage(),
+                                        contentDescription = "null", tint = Color.Black
+                                    )
+                                }
+
+                            }
+
+                            Surface(modifier = Modifier
+                                .padding(10.dp)
+                                .size(width = 180.dp, height = 24.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(color = Color(0xffFFEB56)),
+                                onClick = {
+
+
+                                })
+                            {
+                                Row(
+                                    modifier = Modifier.background(color = Color(0xffFFEB56)),
+                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    Text(
+                                        modifier = Modifier.padding(
+                                            vertical = 3.dp, horizontal = 5.dp
+                                        ),
+                                        text = "Issue an item",
+                                        style = TextStyle(
+                                            color = Color.Black,
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                    )
+
+
+                                    Icon(
+                                        modifier = Modifier,
+                                        painter = R.drawable.plus.resourceImage(),
+                                        contentDescription = "null", tint = Color.Black
+                                    )
+                                }
+
+                            }
+                        }
+
+                        StatusSection(viewModel)
+                        /*  Spacer(modifier = Modifier.height(10.dp))*/
+                        Divider(
+                            color = Color.LightGray, modifier = Modifier
+                                .fillMaxWidth()
+                                .width(1.dp)
+                        )
+
+                        FeatureSection(products = viewModel.products, viewModel)
+
+                    }
+                }
+
+
             }
+
+        }
+    }
+
+}
+
+@Composable
+fun DashboardDrawerSection(
+    drawerMenus: State<List<DrawerMenuItem>>,
+    onSelect: (Int, DrawerMenuItem) -> Unit,
+    viewModel: DashboardViewModel,
+    closeDrawer: () -> Unit)
+{
+    val coroutineScope = rememberCoroutineScope()
+
+    ModalDrawerSheet(
+        modifier = Modifier.width(screenWidth * .75f), drawerContainerColor = Color.LightGray
+    ) {
+        Spacer(Modifier.height(12.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Image(modifier = Modifier.size(150.dp),
+                painter =R.drawable.jayalogo.resourceImage() ,
+                contentDescription = "")
+
 
 
         }
-
+        Divider(color = Color.White)
+        Spacer(Modifier.height(12.dp))
+        drawerMenus.value.forEachIndexed { index, drawerMenuItem ->
+            NavigationDrawerItem(label = {
+                drawerMenuItem.menu.mName.Text(
+                    style = MaterialTheme.typography.h6
+                )
+            }, selected = drawerMenuItem.selected, onClick = {
+                coroutineScope.launch {
+                    closeDrawer()
+                    delay(700)
+                    onSelect(index, drawerMenuItem)
+                }
+            }, modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding), icon = {
+                if (drawerMenuItem.menu == DrawerMenus.Logout) {
+                    Icon(imageVector = Icons.Default.Logout, contentDescription = null)
+                } else {
+                    drawerMenuItem.menu.mIcon.Image(modifier = Modifier.size(15.dp))
+                }
+            })
+            if (drawerMenus.value.last() != drawerMenuItem) {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+        }
     }
 }
 
@@ -335,62 +429,7 @@ fun FeatureSection(products: List<Product>, viewModel: DashboardViewModel) {
    }
 }
 
-@Composable
-fun ProductItem(
-    product: Product,
-    viewModel: DashboardViewModel
-) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .height(150.dp),
-        elevation = 4.dp
-    ){
-        Column(modifier = Modifier
-            .padding(5.dp), verticalArrangement = Arrangement.Top,
-       
-        ) {
-            Row(modifier = Modifier, horizontalArrangement = Arrangement.Start) {
-                Text(
-                    text = product.productQty,
-                    style = TextStyle(
-                        color = Color(0xff036509),fontSize = 10.sp,)
-                )
-            }
 
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(product.productImage)
-                    .crossfade(enable = true)
-                    .size(200)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier.padding(5.dp).align(alignment = Alignment.CenterHorizontally)
-            )
-
-            Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
-                Text(
-                    text = product.productTitle,
-                    style = TextStyle(
-                        color = Color(0xff222222),fontSize = 12.sp, fontWeight = FontWeight.W500)
-                )
-            }
-            Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally).padding(5.dp)) {
-                Text(
-                    text = product.productValue,
-                    style = TextStyle(
-                        color = Color(0xffFF4155),fontSize = 10.sp,), textAlign = TextAlign.Center
-                )
-            }
-
-
-
-
-
-        }
-    }
-}
 
 @Composable
 fun StatusSection(viewModel: DashboardViewModel) {
@@ -447,6 +486,69 @@ fun StatusSection(viewModel: DashboardViewModel) {
 }
 
 
+
+@Composable
+fun ProductItem(
+    product: Product,
+    viewModel: DashboardViewModel
+) {
+    Card(
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth()
+            .height(150.dp),
+        elevation = 4.dp
+    ){
+        Column(modifier = Modifier
+            .padding(5.dp), verticalArrangement = Arrangement.Top,
+
+            ) {
+            Row(modifier = Modifier, horizontalArrangement = Arrangement.Start) {
+                Text(
+                    text = product.productQty,
+                    style = TextStyle(
+                        color = Color(0xff036509),fontSize = 10.sp,)
+                )
+            }
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(product.productImage)
+                    .crossfade(enable = true)
+                    .size(200)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(5.dp)
+                    .align(alignment = Alignment.CenterHorizontally)
+            )
+
+            Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
+                Text(
+                    text = product.productTitle,
+                    style = TextStyle(
+                        color = Color(0xff222222),fontSize = 12.sp, fontWeight = FontWeight.W500)
+                )
+            }
+            Row(modifier = Modifier
+                .align(alignment = Alignment.CenterHorizontally)
+                .padding(5.dp)) {
+                Text(
+                    text = product.productValue,
+                    style = TextStyle(
+                        color = Color(0xffFF4155),fontSize = 10.sp,), textAlign = TextAlign.Center
+                )
+            }
+
+
+
+
+
+        }
+    }
+}
+
+
 @Composable
 fun CardItem(
     @StringRes name: Int,
@@ -498,7 +600,10 @@ fun CardItem(
 
 
 @Composable
-fun AppBarContent(viewModel: DashboardViewModel) {
+fun AppBarContent(
+    viewModel: DashboardViewModel,
+    dashboardDrawerState: DrawerState,
+    uiScope: CoroutineScope,) {
     val uiScope = rememberCoroutineScope()
 
     TopAppBar(
@@ -508,6 +613,16 @@ fun AppBarContent(viewModel: DashboardViewModel) {
     ) {
         IconButton(onClick = {
             uiScope.launch {
+                when (dashboardDrawerState.currentValue) {
+                    DrawerValue.Closed -> dashboardDrawerState.animateTo(
+                        targetValue = DrawerValue.Open, anim = tween(700)
+                    )
+
+                    DrawerValue.Open -> dashboardDrawerState.animateTo(
+                        targetValue = DrawerValue.Closed, anim = tween(700)
+                    )
+                }
+
             }
 
         }) {
