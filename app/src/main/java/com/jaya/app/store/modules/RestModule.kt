@@ -9,6 +9,8 @@ import com.jaya.app.store.data.sources.online.AppVersionApi
 import com.jaya.app.store.data.sources.online.DashboardApi
 import com.jaya.app.store.data.sources.online.MobileVerifyApi
 import com.jaya.app.store.data.sources.online.SendOtpApi
+import com.jaya.app.store.data.sources.online.StockInitialApi
+import com.jaya.app.store.data.sources.online.VendorInitialApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -71,6 +73,18 @@ object RestModule {
     @Singleton
     fun provideAddProductApi(@ApplicationContext appContext: Context): AddProductApi =
         provideApi(appContext, AddProductApi::class.java)
+
+
+    @Provides
+    @Singleton
+    fun provideStockInitialApi(@ApplicationContext appContext: Context): StockInitialApi =
+        provideApi(appContext, StockInitialApi::class.java)
+
+
+    @Provides
+    @Singleton
+    fun provideVendorInitialApi(@ApplicationContext appContext: Context): VendorInitialApi =
+        provideApi(appContext, VendorInitialApi::class.java)
 
 
 

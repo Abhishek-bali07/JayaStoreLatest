@@ -38,6 +38,9 @@ sealed class Destination(
  object AddProductScreen: Destination.NoArgumentsDestination(AppRoutes.ADDPRODUCT)
 
 
+ object IssueProductScreen : Destination.NoArgumentsDestination(AppRoutes.ISSUEPRODUCT)
+
+
 
 
 

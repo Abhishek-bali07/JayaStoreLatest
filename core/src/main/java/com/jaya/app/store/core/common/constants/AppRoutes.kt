@@ -5,7 +5,7 @@ object AppRoutes {
     const val MOBILE = "mobile"
     const val OTP = "otp"
     const val DASHBOARD = "dashboard"
-    const val DETAILSCREEN = "detailScreen"
+    const val ISSUEPRODUCT = "issue product"
     const val ADDPRODUCT = "add product"
 
 }

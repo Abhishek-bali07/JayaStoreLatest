@@ -12,6 +12,7 @@ import com.jaya.app.store.navigation.screen_transition.AppScreenTransitions
 import com.jaya.app.store.presentation.ui.screens.Dashboard.DashBoardScreen
 import com.jaya.app.store.presentation.ui.screens.addProduct.AddProductScreen
 import com.jaya.app.store.presentation.ui.screens.intro.SplashScreen
+import com.jaya.app.store.presentation.ui.screens.issueProduct.IssueProductScreen
 import com.jaya.app.store.presentation.ui.screens.login.MobileNumberScreen
 import com.jaya.app.store.presentation.ui.screens.login.OtpScreen
 import com.jaya.app.store.presentation.ui.view_models.BaseViewModel
@@ -55,7 +56,12 @@ fun MainNavGraph(
         }
 
         composable(destination =  Destination.AddProductScreen){
-            AddProductScreen()
+            AddProductScreen(baseViewModel = baseViewModel)
+        }
+
+
+        composable(destination =  Destination.IssueProductScreen){
+            IssueProductScreen(baseViewModel = baseViewModel)
         }
 
 
