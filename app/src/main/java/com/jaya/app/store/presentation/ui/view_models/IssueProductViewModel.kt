@@ -1,18 +1,255 @@
 package com.jaya.app.store.presentation.ui.view_models
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.jaya.app.store.core.common.enums.EmitType
+import com.jaya.app.store.core.entities.ItemProduct
+import com.jaya.app.store.core.entities.Plant
+import com.jaya.app.store.core.entities.Section
+import com.jaya.app.store.core.entities.SectionData
+import com.jaya.app.store.core.entities.Shift
+import com.jaya.app.store.core.entities.StockData
+import com.jaya.app.store.core.usecase.IssueProductUseCase
+import com.jaya.app.store.core.utils.helper.AppNavigator
+import com.jaya.app.store.presentation.states.castListToRequiredTypes
+import com.jaya.app.store.presentation.states.castValueToRequiredTypes
+import com.jaya.app.store.utils.helper_impl.SavableMutableState
+import com.jaya.app.store.utils.helper_impl.UiData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class IssueProductViewModel @Inject constructor(
+    val appNavigator: AppNavigator,
+    savedStateHandle: SavedStateHandle,
+    private val productIssueUseCase: IssueProductUseCase
+):ViewModel()
+{
 
-):ViewModel(){
+    val selectedProduct = mutableStateOf<ItemProduct?>(null)
+
+    val selectedItem = mutableStateOf<SectionData?>(null)
+
+    val selectPlant = mutableStateOf<Plant?>(null)
+
+    val selectShift = mutableStateOf<Section?>(null)
 
 
 
     val isExpandedItem = mutableStateOf(false)
 
-    val isExpandedVendor = mutableStateOf(false)
+    val isExpandedPlant = mutableStateOf(false)
+
+    val isExpandedSection = mutableStateOf(false)
+
+    val isExpandedSubsection = mutableStateOf(false)
+
+
+    val itemNumber = mutableStateOf("")
+
+    val orderBy = mutableStateOf("")
+
+    val takingName = mutableStateOf("")
+
+    val where = mutableStateOf("")
+
+
+
+    private val _productDetails = MutableStateFlow<List<ItemProduct>>(emptyList())
+    val productDetails =  _productDetails.asStateFlow()
+
+    private val _sectionDetails = MutableStateFlow<List<Section>>(emptyList())
+    val stockDetails = _sectionDetails.asStateFlow()
+
+
+    private val _plantDetails = MutableStateFlow<List<Plant>>(emptyList())
+    val plantDetails = _plantDetails.asStateFlow()
+
+
+    private val _subsectionDetails = MutableStateFlow<List<SectionData>>(emptyList())
+    val subsectionDetails = _subsectionDetails.asStateFlow()
+
+
+    fun onChangeOrder(co:String) {
+        orderBy.value = co
+    }
+    fun onChangeItemNumber(cin:String) {
+        itemNumber.value = cin
+    }
+
+    fun onChangeTakingName(tname:String) {
+        takingName.value = tname
+    }
+
+    fun onChangeAskedName(aname:String) {
+        where.value = aname
+    }
+
+    val enableBtn = SavableMutableState(
+        key = UiData.AddNowBtnEnable,
+        savedStateHandle = savedStateHandle,
+        initialData = false
+    )
+
+    val addLoading = SavableMutableState(
+        key = UiData.NewClientApiLoading,
+        savedStateHandle = savedStateHandle,
+        initialData = false
+    )
+
+
+    init {
+
+        initialSubSectionData()
+        initialProductData()
+        initialPlantData()
+        initialSectionData()
+        validateInputs()
+    }
+
+
+
+    private  fun validateInputs() {
+        viewModelScope.launch {
+            while (true) {
+                delay(200L)
+                enableBtn.setValue(
+                    when{
+
+                        else -> true
+                    }
+                )
+            }
+        }
+    }
+
+
+    private  fun initialProductData() {
+       productIssueUseCase.Products().onEach {
+            when (it.type) {
+                EmitType.productDetails -> {
+                    it.value?.castListToRequiredTypes<ItemProduct>()?.let { data->
+                        _productDetails.update { data }
+
+                    }
+                }
+                EmitType.BackendError -> {
+                    it.value?.castValueToRequiredTypes<String>()?.let {
+
+                    }
+                }
+
+                EmitType.NetworkError -> {
+                    it.value?.castValueToRequiredTypes<String>()?.let {
+
+                    }
+                }
+
+                else -> {}
+            }
+
+        }.launchIn(viewModelScope)
+
+    }
+
+
+    private  fun initialSectionData() {
+       productIssueUseCase.Section().onEach {
+            when (it.type) {
+                EmitType.sectionDetails-> {
+                    it.value?.castListToRequiredTypes<Section>()?.let { data->
+                        _sectionDetails.update { data }
+
+                    }
+                }
+                EmitType.BackendError -> {
+                    it.value?.castValueToRequiredTypes<String>()?.let {
+
+                    }
+                }
+
+                EmitType.NetworkError -> {
+                    it.value?.castValueToRequiredTypes<String>()?.let {
+
+                    }
+                }
+
+                else -> {}
+            }
+
+        }.launchIn(viewModelScope)
+
+    }
+
+
+    private fun initialPlantData(){
+        productIssueUseCase.Plants().onEach {
+            when (it.type) {
+                EmitType.plantDetails-> {
+                    it.value?.castListToRequiredTypes<Plant>()?.let { data->
+                        _plantDetails.update { data }
+
+                    }
+                }
+                EmitType.BackendError -> {
+                    it.value?.castValueToRequiredTypes<String>()?.let {
+
+                    }
+                }
+
+                EmitType.NetworkError -> {
+                    it.value?.castValueToRequiredTypes<String>()?.let {
+
+                    }
+                }
+
+                else -> {}
+            }
+
+        }.launchIn(viewModelScope)
+    }
+
+
+    private  fun initialSubSectionData() {
+        productIssueUseCase.Subsection().onEach {
+            when (it.type) {
+                EmitType.subsectionDetails-> {
+                    it.value?.castListToRequiredTypes<SectionData>()?.let { data->
+                        _subsectionDetails.update { data }
+
+                    }
+                }
+                EmitType.BackendError -> {
+                    it.value?.castValueToRequiredTypes<String>()?.let {
+
+                    }
+                }
+
+                EmitType.NetworkError -> {
+                    it.value?.castValueToRequiredTypes<String>()?.let {
+
+                    }
+                }
+
+                else -> {}
+            }
+
+        }.launchIn(viewModelScope)
+
+    }
+
+
+
+
+
+
 }

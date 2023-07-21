@@ -5,6 +5,8 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,6 +85,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
 import com.jaya.app.store.presentation.states.DrawerMenuItem
 import com.jaya.app.store.presentation.states.DrawerMenus
@@ -248,9 +251,10 @@ fun DashBoardScreen(
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(color = Color(0xffFFEB56)),
                                 onClick = {
+                                    viewModel.issueProduct()
+                                }
 
-
-                                })
+                            )
                             {
                                 Row(
                                     modifier = Modifier.background(color = Color(0xffFFEB56)),

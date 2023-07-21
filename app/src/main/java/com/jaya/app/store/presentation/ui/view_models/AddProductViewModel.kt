@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jaya.app.store.core.common.constants.Destination
 import com.jaya.app.store.core.common.enums.EmitType
+import com.jaya.app.store.core.entities.Gst
 import com.jaya.app.store.core.entities.StockData
+import com.jaya.app.store.core.entities.Supplier
 import com.jaya.app.store.core.entities.UploadData
 import com.jaya.app.store.core.entities.Vendor
 import com.jaya.app.store.core.usecase.AddProductUseCase
@@ -37,9 +39,9 @@ class AddProductViewModel  @Inject constructor(
 
 
 
-    val selectedVendor = mutableStateOf<Vendor?>(null)
+    val selectedSupplier = mutableStateOf<Supplier?>(null)
 
-    val selectedItem = mutableStateOf<StockData?>(null)
+    val selectedGst = mutableStateOf<Gst?>(null)
 
 
     val isSourceExpanded = mutableStateOf(false)
@@ -47,21 +49,53 @@ class AddProductViewModel  @Inject constructor(
     val isItemExpanded = mutableStateOf(false)
 
 
-    val productRate = mutableStateOf("")
-    val stockItem = mutableStateOf("")
+    val brandName = mutableStateOf("")
+    val productName = mutableStateOf("")
+    val basic = mutableStateOf("")
+    val rate = mutableStateOf("")
+    val quantity = mutableStateOf("")
+    val state = mutableStateOf("")
 
-    private val _vendorDetails = MutableStateFlow<List<Vendor>>(emptyList())
+
+   /* private val _vendorDetails = MutableStateFlow<List<Vendor>>(emptyList())
     val vendorDetails = _vendorDetails.asStateFlow()
 
     private val _stockDetails = MutableStateFlow<List<StockData>>(emptyList())
-    val stockDetails = _stockDetails.asStateFlow()
+    val stockDetails = _stockDetails.asStateFlow()*/
 
-    fun onChangeRate(rate:String) {
-        productRate.value = rate
+
+    private val _supplierDetails = MutableStateFlow<List<Supplier>>(emptyList())
+    val supplierDetails =  _supplierDetails.asStateFlow()
+
+
+    private val _gstDetails = MutableStateFlow<List<Gst>>(emptyList())
+    val gstDetails =  _gstDetails.asStateFlow()
+
+    fun onChangeBrand(rate:String) {
+        brandName.value = rate
     }
 
-    fun onChangeStck(stock:String) {
-        stockItem.value = stock
+    fun onChangeProduct(stock:String) {
+        productName.value = stock
+    }
+
+    fun onChangeBasic(b:String) {
+        basic.value = b
+    }
+
+
+    fun onChangeQuantity(cq:String) {
+        quantity.value = cq
+    }
+
+
+    fun onChangeState(cs:String) {
+        state.value = cs
+    }
+
+
+    fun onChangeRate(r:String) {
+        rate.value = r
     }
 
 
@@ -78,8 +112,8 @@ class AddProductViewModel  @Inject constructor(
     )
 
     init {
-        initialVendorData()
-        initialStockData()
+        initialSupplierData()
+        initialGstData()
         validateInputs()
     }
 
@@ -90,10 +124,22 @@ class AddProductViewModel  @Inject constructor(
                 delay(200L)
                 enableBtn.setValue(
                     when{
-                        productRate.value.isEmpty() ->{
+                        brandName.value.isEmpty() ->{
                             false
                         }
-                        stockItem.value.isEmpty() ->{
+                        productName.value.isEmpty() ->{
+                            false
+                        }
+                        basic.value.isEmpty() ->{
+                            false
+                        }
+                        rate.value.isEmpty() ->{
+                            false
+                        }
+                        quantity.value.isEmpty() ->{
+                            false
+                        }
+                        state.value.isEmpty() ->{
                             false
                         }
 
@@ -107,12 +153,12 @@ class AddProductViewModel  @Inject constructor(
 
 
 
-    private  fun initialVendorData() {
-        addProductUseCase.vendorDetails().onEach {
+    private  fun initialSupplierData() {
+       addProductUseCase.SupplierDetails() .onEach {
             when (it.type) {
-                EmitType.vendorDetails -> {
-                    it.value?.castListToRequiredTypes<Vendor>()?.let { data->
-                        _vendorDetails.update { data }
+                EmitType.supplierDetails -> {
+                    it.value?.castListToRequiredTypes<Supplier>()?.let { data->
+                        _supplierDetails.update { data }
 
                     }
                 }
@@ -136,12 +182,12 @@ class AddProductViewModel  @Inject constructor(
     }
 
 
-    private  fun initialStockData() {
-        addProductUseCase.ItemDetails().onEach {
+    private  fun initialGstData() {
+        addProductUseCase.GstDetails().onEach {
             when (it.type) {
-                EmitType.stockDetails-> {
-                    it.value?.castListToRequiredTypes<StockData>()?.let { data->
-                        _stockDetails.update { data }
+                EmitType.gstDetails-> {
+                    it.value?.castListToRequiredTypes<Gst>()?.let { data->
+                       _gstDetails.update { data }
 
                     }
                 }
@@ -167,10 +213,14 @@ class AddProductViewModel  @Inject constructor(
 
     fun uploadProductData(){
         val uploadData = UploadData(
-            vendorName = selectedVendor.value?.vendorId ?: "",
-            selectedItem = selectedItem.value?.stockId ?: "",
-            rate = productRate.value,
-            stockNumber = stockItem.value,
+            productName = productName.value,
+            brandName = brandName.value,
+            selectedSupplier = selectedSupplier.value?.supplierId ?: "",
+            basic =basic.value,
+            selectGst = selectedGst.value?.gstId ?: "",
+            rate =rate.value,
+            quantity = quantity.value,
+            state = state.value
         )
         addProductUseCase.addProductData(uploadData).onEach {
             when(it.type){

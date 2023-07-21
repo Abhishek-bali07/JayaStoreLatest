@@ -21,15 +21,15 @@ class AddProductUseCase @Inject constructor(
 
 
 
-    fun vendorDetails() = flow<Data> {
+    fun SupplierDetails() = flow {
         emit(Data(EmitType.Loading, value = true))
-        when(val response = repository.getVendor(appStore.userId())){
+        when(val response = repository.getSupplier(appStore.userId())){
             is Resource.Success ->{
                 emit(Data(EmitType.Loading, false))
                 response.data?.apply {
                     when(status){
                         true ->{
-                            emit(Data(EmitType.vendorDetails, value = vendor))
+                            emit(Data(EmitType.supplierDetails, value = supplier))
                         }
                         else -> {
                             emit(Data(EmitType.BackendError, message))
@@ -45,15 +45,15 @@ class AddProductUseCase @Inject constructor(
 
 
 
-    fun ItemDetails() = flow {
+    fun GstDetails() = flow {
         emit(Data(EmitType.Loading, value = true))
-        when(val response = repository.getItem(appStore.userId())){
+        when(val response = repository.getGst(appStore.userId())){
             is Resource.Success ->{
                 emit(Data(EmitType.Loading, false))
                 response.data?.apply {
                     when(status){
                         true ->{
-                            emit(Data(EmitType.stockDetails, value = stockData))
+                            emit(Data(EmitType.gstDetails, value = gst))
                         }
                         else -> {
                             emit(Data(EmitType.BackendError, message))

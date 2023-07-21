@@ -16,6 +16,14 @@ enum class EmitType {
     ProductInitialDetails,
     vendorDetails,
     stockDetails,
+    plantDetails,
+    shiftDetails,
+    zoneDetails,
+    supplierDetails,
+    gstDetails,
+    productDetails,
+    sectionDetails,
+    subsectionDetails,
 
 
 }

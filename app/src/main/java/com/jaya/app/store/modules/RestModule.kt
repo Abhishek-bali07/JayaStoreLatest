@@ -7,10 +7,14 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.jaya.app.store.data.sources.online.AddProductApi
 import com.jaya.app.store.data.sources.online.AppVersionApi
 import com.jaya.app.store.data.sources.online.DashboardApi
+import com.jaya.app.store.data.sources.online.GstInitialApi
 import com.jaya.app.store.data.sources.online.MobileVerifyApi
+import com.jaya.app.store.data.sources.online.PlantInitialApi
+import com.jaya.app.store.data.sources.online.ProductInitialApi
+import com.jaya.app.store.data.sources.online.SectionInitialApi
 import com.jaya.app.store.data.sources.online.SendOtpApi
-import com.jaya.app.store.data.sources.online.StockInitialApi
-import com.jaya.app.store.data.sources.online.VendorInitialApi
+import com.jaya.app.store.data.sources.online.SubSectionApi
+import com.jaya.app.store.data.sources.online.SupplierInitialApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -77,14 +81,40 @@ object RestModule {
 
     @Provides
     @Singleton
-    fun provideStockInitialApi(@ApplicationContext appContext: Context): StockInitialApi =
-        provideApi(appContext, StockInitialApi::class.java)
+    fun provideGstInitialApi(@ApplicationContext appContext: Context): GstInitialApi =
+        provideApi(appContext, GstInitialApi::class.java)
 
 
     @Provides
     @Singleton
-    fun provideVendorInitialApi(@ApplicationContext appContext: Context): VendorInitialApi =
-        provideApi(appContext, VendorInitialApi::class.java)
+    fun provideSupplierInitialApi(@ApplicationContext appContext: Context): SupplierInitialApi =
+        provideApi(appContext, SupplierInitialApi::class.java)
+
+
+    @Provides
+    @Singleton
+    fun provideProductInitialApi(@ApplicationContext appContext: Context): ProductInitialApi =
+        provideApi(appContext, ProductInitialApi::class.java)
+
+
+    @Provides
+    @Singleton
+    fun providePlantInitialApi(@ApplicationContext appContext: Context): PlantInitialApi =
+        provideApi(appContext, PlantInitialApi::class.java)
+
+
+
+    @Provides
+    @Singleton
+    fun provideSectionInitialApi(@ApplicationContext appContext: Context): SectionInitialApi =
+        provideApi(appContext, SectionInitialApi::class.java)
+
+
+
+    @Provides
+    @Singleton
+    fun provideSubSectionApi(@ApplicationContext appContext: Context): SubSectionApi =
+        provideApi(appContext, SubSectionApi::class.java)
 
 
 

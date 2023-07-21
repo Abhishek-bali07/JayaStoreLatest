@@ -19,6 +19,8 @@
     <string name="mixing">Mixing Ingredients</string>
     <string name="save">Save</string>
     <string name="addNow">Add Now</string>
+    <string name="addProduct">Add Product</string>
+    <string name="submitNow">Submit Now</string>
 
     <string name="totalItem">Total Item</string>
     <string name="itemIssued">Item Issued</string>

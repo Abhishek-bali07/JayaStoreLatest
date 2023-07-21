@@ -128,6 +128,15 @@ class DashboardViewModel @Inject constructor(
     }
 
 
+    fun issueProduct(){
+        appNavigator.tryNavigateTo(
+            Destination.IssueProductScreen(),
+            popUpToRoute = null,
+            inclusive = false,
+            isSingleTop = true
+        )
+    }
+
     fun onChangeSearchTxt(search :String){
         searchTxt.value = search
         viewModelScope.launch {

@@ -1,10 +1,10 @@
 package com.jaya.app.store.core.models.responses
 
-import com.jaya.app.store.core.entities.Vendor
+import com.jaya.app.store.core.entities.Supplier
 
-data class VendorDetailResponse(
+data class SupplierDetailResponse(
 
     val status: Boolean,
     val message: String,
-    val vendor: List<Vendor>
+    val supplier: List<Supplier>
 )

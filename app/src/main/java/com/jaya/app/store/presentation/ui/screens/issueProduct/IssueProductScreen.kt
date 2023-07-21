@@ -16,14 +16,17 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jaya.app.store.R
 import com.jaya.app.store.presentation.states.resourceImage
+import com.jaya.app.store.presentation.ui.custom_composable.StrickyButton
 import com.jaya.app.store.presentation.ui.view_models.BaseViewModel
 import com.jaya.app.store.presentation.ui.view_models.IssueProductViewModel
 
@@ -59,7 +63,7 @@ fun IssueProductScreen(
                },
                navigationIcon = {
                    IconButton(onClick = {
-
+                        viewModel.appNavigator.tryNavigateBack()
                    }) {
                        Icon( modifier = Modifier
                            .size(40.dp)
@@ -85,59 +89,187 @@ fun AddIssueSection(
     ) {
         val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
 
-        Column(modifier = Modifier.fillMaxWidth().weight(1f),){
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f),){
             val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
 
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(4.dp),
-                    border = BorderStroke(1.dp, Color.LightGray),
-                    modifier = Modifier
-                        .width(screenWidthDp * .90f)
-                        .height(55.dp),
+            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 5.dp), horizontalArrangement = Arrangement.SpaceBetween
+                )
+            {
+                Box(
+                    modifier = Modifier,
+                    contentAlignment = Alignment.Center
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        border = BorderStroke(1.dp, Color.LightGray),
+                        modifier = Modifier
+                            .width(screenWidthDp * .60f)
+                            .height(55.dp),
 
-                    ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                        ) {
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
 
 
-                        Text(
-                            modifier = Modifier.padding(
-                                vertical = 3.dp, horizontal = 10.dp
-                            ),
-                            text = "",
-                            style = TextStyle(
-                                color = Color(0xff212121),
-                                fontSize = 13.sp,
-                            ),
-                        )
-                        IconButton(onClick = {
-                            viewModel.isExpandedItem.value =
-                                !viewModel.isExpandedItem.value
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
+                            Text(
+                                modifier = Modifier.padding(
+                                    vertical = 3.dp, horizontal = 10.dp
+                                ),
+                                text ="${viewModel.selectedProduct.value?.productName}",
+                                style = TextStyle(
+                                    color = Color(0xff212121),
+                                    fontSize = 13.sp,
+                                ),
                             )
+                            IconButton(onClick = {
+                                viewModel.isExpandedItem.value =
+                                    !viewModel.isExpandedItem.value
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
+                                )
+                            }
+                        }
+
+                        DropdownMenu(modifier = Modifier.width(250.dp),
+                            expanded =  viewModel.isExpandedItem.value,
+                            onDismissRequest = {  viewModel.isExpandedItem.value = false })
+                        {
+
+                            viewModel.productDetails.collectAsState().value.forEach { product ->
+                                DropdownMenuItem(onClick = {
+                                    viewModel.selectedProduct.value = product
+                                    viewModel.isExpandedItem.value = false
+                                }) {
+                                    Text(text = product.productName)
+                                }
+
+                            }
+
                         }
                     }
 
-                    DropdownMenu(
-                        expanded =  viewModel.isExpandedItem.value,
-                        onDismissRequest = {  viewModel.isExpandedItem.value = false }) {
 
 
-
-                    }
                 }
+
+
+                OutlinedTextField(
+                    modifier = Modifier.padding(horizontal = 5.dp)
+                        .width(screenWidthDp * .30f)
+                        .height(55.dp),
+                    value =viewModel.itemNumber.value,
+                    placeholder = {
+                        Text(
+                            text = "Entrer NOS", style = TextStyle(
+                                color = Color.Gray.copy(alpha = 0.2f)
+
+                            )
+                        )
+                    },
+                    trailingIcon = {},
+                    onValueChange = viewModel::onChangeItemNumber,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color.LightGray,
+                        unfocusedBorderColor =  Color.LightGray,
+                    )
+                )
             }
+
+
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 22.dp, vertical = 10.dp)
+                    .height(height = 55.dp),
+                value =viewModel.orderBy.value,
+                placeholder = {
+                    Text(
+                        text = "Order By", style = TextStyle(
+                            color = Color.Gray.copy(alpha = 0.2f)
+
+                        )
+                    )
+                },
+                trailingIcon = {},
+                onValueChange = viewModel::onChangeOrder,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color.LightGray,
+                    unfocusedBorderColor =  Color.LightGray,
+                )
+            )
+            
+
+
+
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 22.dp, vertical = 5.dp)
+                    .size(height = 55.dp, width = 300.dp),
+                value =viewModel.takingName.value,
+                placeholder = {
+                    Text(
+                        text = "Taken By Name", style = TextStyle(
+                            color = Color.Gray.copy(alpha = 0.2f)
+
+                        )
+                    )
+                },
+                trailingIcon = {},
+                onValueChange = viewModel::onChangeTakingName,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color.LightGray,
+                    unfocusedBorderColor =  Color.LightGray,
+                )
+            )
+
+
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 22.dp, vertical = 5.dp)
+                    .size(height = 55.dp, width = 300.dp),
+                value =viewModel.where.value,
+                placeholder = {
+                    Text(
+                        text = "Where", style = TextStyle(
+                            color = Color.Gray.copy(alpha = 0.2f)
+
+                        )
+                    )
+                },
+                trailingIcon = {},
+                onValueChange = viewModel::onChangeAskedName,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color.LightGray,
+                    unfocusedBorderColor =  Color.LightGray,
+                )
+            )
+
+
+
+
+
+
+
+
+
+
         }
+
+
+
+        StrickyButton(
+            enable = viewModel.enableBtn.value,
+            loading = viewModel.addLoading.value,
+            action = { },
+            name = R.string.submitNow)
     }
 }
