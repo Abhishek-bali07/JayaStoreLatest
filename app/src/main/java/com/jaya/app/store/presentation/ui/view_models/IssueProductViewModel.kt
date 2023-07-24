@@ -1,5 +1,6 @@
 package com.jaya.app.store.presentation.ui.view_models
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -9,8 +10,6 @@ import com.jaya.app.store.core.entities.ItemProduct
 import com.jaya.app.store.core.entities.Plant
 import com.jaya.app.store.core.entities.Section
 import com.jaya.app.store.core.entities.SectionData
-import com.jaya.app.store.core.entities.Shift
-import com.jaya.app.store.core.entities.StockData
 import com.jaya.app.store.core.usecase.IssueProductUseCase
 import com.jaya.app.store.core.utils.helper.AppNavigator
 import com.jaya.app.store.presentation.states.castListToRequiredTypes
@@ -62,21 +61,33 @@ class IssueProductViewModel @Inject constructor(
 
     val where = mutableStateOf("")
 
+    val searchTxt = mutableStateOf<String>("")
+    val plantSearchTxt = mutableStateOf<String>("")
 
-
-    private val _productDetails = MutableStateFlow<List<ItemProduct>>(emptyList())
-    val productDetails =  _productDetails.asStateFlow()
+    /*private val _productDetails = MutableStateFlow<List<ItemProduct>>(emptyList())
+    val productDetails =  _productDetails.asStateFlow()*/
 
     private val _sectionDetails = MutableStateFlow<List<Section>>(emptyList())
     val stockDetails = _sectionDetails.asStateFlow()
 
 
-    private val _plantDetails = MutableStateFlow<List<Plant>>(emptyList())
-    val plantDetails = _plantDetails.asStateFlow()
+   /* private val _plantDetails = MutableStateFlow<List<Plant>>(emptyList())
+    val plantDetails = _plantDetails.asStateFlow()*/
 
 
     private val _subsectionDetails = MutableStateFlow<List<SectionData>>(emptyList())
     val subsectionDetails = _subsectionDetails.asStateFlow()
+
+
+    val products = mutableStateListOf<ItemProduct>()
+
+    val searchProduct = mutableStateListOf<ItemProduct>()
+
+
+    val plants = mutableStateListOf<Plant>()
+
+    val searchPlant = mutableStateListOf<Plant>()
+
 
 
     fun onChangeOrder(co:String) {
@@ -138,7 +149,12 @@ class IssueProductViewModel @Inject constructor(
             when (it.type) {
                 EmitType.productDetails -> {
                     it.value?.castListToRequiredTypes<ItemProduct>()?.let { data->
-                        _productDetails.update { data }
+                        searchProduct.clear()
+                        searchProduct.addAll(data)
+                        products.clear()
+                        products.addAll(data)
+                   /*     _productDetails.update { emptyList() }
+                        _productDetails.update { data }*/
 
                     }
                 }
@@ -160,6 +176,49 @@ class IssueProductViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
     }
+
+
+    fun onChangeSearchTxt(search :String){
+        searchTxt.value = search
+        viewModelScope.launch {
+            delay(400L)
+            searchProduct.filter {
+                if (it.productName != null){
+                    return@filter it.productName.lowercase().contains(search.lowercase())
+                }
+                false
+            }.let {
+                products.clear()
+                products.addAll(it)
+
+            }
+
+        }
+    }
+
+
+    fun onChangePlantTxt(psearch :String){
+        plantSearchTxt.value = psearch
+        viewModelScope.launch {
+            delay(400L)
+            searchPlant.filter {
+                if (it.plantName != null){
+                    return@filter it.plantName.lowercase().contains(psearch.lowercase())
+                }
+                false
+            }.let {
+                plants.clear()
+                plants.addAll(it)
+
+            }
+
+        }
+    }
+
+
+
+
+
 
 
     private  fun initialSectionData() {
@@ -196,7 +255,12 @@ class IssueProductViewModel @Inject constructor(
             when (it.type) {
                 EmitType.plantDetails-> {
                     it.value?.castListToRequiredTypes<Plant>()?.let { data->
-                        _plantDetails.update { data }
+                        searchPlant.clear()
+                        searchPlant.addAll(data)
+                        plants.clear()
+                        plants.addAll(data)
+
+                       /* _plantDetails.update { data }*/
 
                     }
                 }
