@@ -19,6 +19,7 @@ import com.jaya.app.store.utils.helper_impl.SavableMutableState
 import com.jaya.app.store.utils.helper_impl.UiData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,18 +30,29 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private  val appNavigator: AppNavigator,
     private val splashUseCases: SplashUseCase,
+  //  private val connectivity: AppConnectivity,
     savedStateHandle: SavedStateHandle
 ) :ViewModel() {
 
 
+    val splashAnimation = mutableStateOf(false)
+
+//    val connectivityStatus = connectivity.connectivityStatusFlow
+
     init {
         viewModelScope.launch {
+            //splashAnimation()
             checkAppVersion()
             checkIntroStatus()
 
         }
+    }
 
 
+    private suspend fun splashAnimation() {
+        splashAnimation.value = true
+        delay(500L)
+        splashAnimation.value = false
     }
 
     val splashBtnStatus = SavableMutableState(
