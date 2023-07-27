@@ -2,10 +2,12 @@ package com.jaya.app.store.data.repositories
 
 import com.jaya.app.store.core.common.constants.Resource
 import com.jaya.app.store.core.domain.repositories.IssueProductRepository
+import com.jaya.app.store.core.entities.SubmitData
 import com.jaya.app.store.core.models.responses.PlantListResponse
 import com.jaya.app.store.core.models.responses.ProductDetailResponse
 import com.jaya.app.store.core.models.responses.SectionListResponse
 import com.jaya.app.store.core.models.responses.SubSectionListResponse
+import com.jaya.app.store.core.models.responses.UploadIssueResponse
 import com.jaya.app.store.data.sources.online.PlantInitialApi
 import com.jaya.app.store.data.sources.online.ProductInitialApi
 import com.jaya.app.store.data.sources.online.SectionInitialApi
@@ -83,6 +85,13 @@ class IssueProductRepositoryImpl @Inject constructor(
         } catch (ex: Exception) {
             Resource.Error(ex.message.toString())
         }
+    }
+
+    override suspend fun submitProductData(
+        userId: String,
+        submitData: SubmitData
+    ): Resource<UploadIssueResponse> {
+        TODO("Not yet implemented")
     }
 
 }

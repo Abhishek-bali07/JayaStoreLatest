@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jaya.app.store.core.common.constants.Destination
 import com.jaya.app.store.core.common.enums.EmitType
 import com.jaya.app.store.core.entities.ItemProduct
 import com.jaya.app.store.core.entities.Plant
 import com.jaya.app.store.core.entities.Section
 import com.jaya.app.store.core.entities.SectionData
+import com.jaya.app.store.core.entities.SubmitData
 import com.jaya.app.store.core.usecase.IssueProductUseCase
 import com.jaya.app.store.core.utils.helper.AppNavigator
 import com.jaya.app.store.presentation.states.castListToRequiredTypes
@@ -36,11 +38,14 @@ class IssueProductViewModel @Inject constructor(
 
     val selectedProduct = mutableStateOf<ItemProduct?>(null)
 
+
+
+
     val selectedItem = mutableStateOf<SectionData?>(null)
 
     val selectPlant = mutableStateOf<Plant?>(null)
 
-    val selectShift = mutableStateOf<Section?>(null)
+    val selectSection = mutableStateOf<Section?>(null)
 
 
 
@@ -68,7 +73,7 @@ class IssueProductViewModel @Inject constructor(
     val productDetails =  _productDetails.asStateFlow()*/
 
     private val _sectionDetails = MutableStateFlow<List<Section>>(emptyList())
-    val stockDetails = _sectionDetails.asStateFlow()
+    val sectionDetails = _sectionDetails.asStateFlow()
 
 
    /* private val _plantDetails = MutableStateFlow<List<Plant>>(emptyList())
@@ -216,11 +221,6 @@ class IssueProductViewModel @Inject constructor(
     }
 
 
-
-
-
-
-
     private  fun initialSectionData() {
        productIssueUseCase.Section().onEach {
             when (it.type) {
@@ -313,7 +313,57 @@ class IssueProductViewModel @Inject constructor(
 
 
 
+    fun SubmitIssue(){
+        val submitData = SubmitData(
+            productName =selectedProduct.value?.productId ?: "" ,
+            pQuantity = itemNumber.value,
+            orderBy = orderBy.value,
+            takenName =takingName.value,
+            aboutProduct =where.value,
+            selectPlant=selectPlant.value?.plantId ?: "",
+            selectSection =selectSection.value?.sectionId ?: "",
+            subSection = selectedItem.value?.subsectionId ?: "",
+        )
+        productIssueUseCase.submitProduct(submitData).onEach {
+            when(it.type){
+                EmitType.Loading ->{
+                    it.value?.apply {
+                        castValueToRequiredTypes<Boolean>()?.let {
+                            addLoading.setValue(it)
+                        }
+                    }
+                }
+                EmitType.Inform ->{
+                    it.value?.apply {
+                        castValueToRequiredTypes<Boolean>()?.let {
 
+                        }
+                    }
+                }
+                EmitType.Navigate -> {
+                    it.value?.apply {
+                        castValueToRequiredTypes<Destination>()?.let { destination ->
+                            appNavigator.tryNavigateBack()
+                        }
+                    }
+                }
+                EmitType.NetworkError -> {
+                    it.value?.apply {
+                        castValueToRequiredTypes<String>()?.let {
 
+                        }
+                    }
+                }
 
+                EmitType.BackendError -> {
+                    it.value?.apply {
+                        castValueToRequiredTypes<String>()?.let {
+
+                        }
+                    }
+                }
+                else -> {}
+            }
+        }.launchIn(viewModelScope)
+    }
 }

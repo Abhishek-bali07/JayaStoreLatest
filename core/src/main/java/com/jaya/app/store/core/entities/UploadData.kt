@@ -9,8 +9,4 @@ data class UploadData(
     val rate: String,
     val quantity:String,
     val state:String,
-
-
-
-
 )

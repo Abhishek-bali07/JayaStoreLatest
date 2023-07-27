@@ -29,7 +29,7 @@ fun MainNavGraph(
     navHostController.NavEffects(navigationChannel)
     AppNavHost(
             navController = navHostController,
-            startDestination = Destination.DashBoardScreen,
+            startDestination = Destination.SplashScreen,
             modifier = Modifier.padding(paddingValues),
             enterTransition = AppScreenTransitions.ScreenEnterTransition,
             popEnterTransition = AppScreenTransitions.ScreenPopEnterTransition,

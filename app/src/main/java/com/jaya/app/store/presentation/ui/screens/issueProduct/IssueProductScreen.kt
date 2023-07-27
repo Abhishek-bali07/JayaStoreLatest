@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.jaya.app.store.R
 import com.jaya.app.store.core.common.enums.EmitType
 import com.jaya.app.store.presentation.states.resourceImage
+import com.jaya.app.store.presentation.states.statusBarColor
 import com.jaya.app.store.presentation.ui.custom_composable.StrickyButton
 import com.jaya.app.store.presentation.ui.view_models.BaseViewModel
 import com.jaya.app.store.presentation.ui.view_models.IssueProductViewModel
@@ -57,7 +58,7 @@ fun IssueProductScreen(
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(scaffoldState = scaffoldState) {paddingValues ->
-       Column(modifier = Modifier
+       Column(modifier = Modifier.statusBarColor(Color(0xffFFEB56))
            .padding(paddingValues)
            .fillMaxSize()) {
            TopAppBar(
@@ -375,14 +376,16 @@ fun AddIssueSection(
                         }
                     }
 
-                    DropdownMenu(modifier = Modifier.width(screenWidthDp * .90f).padding(horizontal = 20.dp),
+                    DropdownMenu(modifier = Modifier
+                        .width(screenWidthDp * .90f)
+                        .padding(horizontal = 20.dp),
                         expanded = viewModel.isExpandedPlant.value,
                         onDismissRequest = { viewModel.isExpandedPlant.value = false }) {
 
                         OutlinedTextField(
                             value =  viewModel.plantSearchTxt.value,
                             onValueChange = viewModel::onChangePlantTxt,
-                            modifier = Modifier,
+                            modifier = Modifier.width(screenWidthDp * .90f),
                             leadingIcon = {
                                 Icon(
                                     Icons.Default.Search,
@@ -410,7 +413,227 @@ fun AddIssueSection(
                 }
             }
 
+             Row(modifier = Modifier
+                 .fillMaxWidth()
+                 .padding(horizontal = 18.dp, vertical = 5.dp), horizontalArrangement = Arrangement.SpaceBetween) {
 
+
+
+                 Box(
+                     modifier = Modifier.weight(1f),
+                     contentAlignment = Alignment.Center
+                 ) {
+
+                     Surface(
+                         shape = RoundedCornerShape(4.dp),
+                         border = BorderStroke(1.dp, Color.LightGray),
+                         modifier = Modifier
+                             .width(screenWidthDp * .45f)
+                             .height(55.dp),
+
+                         ) {
+                         Row(
+                             horizontalArrangement = Arrangement.SpaceBetween,
+                             verticalAlignment = Alignment.CenterVertically
+                         ) {
+
+
+                             if (viewModel.selectSection.value != null) {
+                                 Text(
+                                     modifier = Modifier.padding(
+                                         vertical = 3.dp, horizontal = 10.dp
+                                     ),
+                                     text = viewModel.selectSection.value!!.sectionName,
+                                     style = TextStyle(
+                                         color = Color(0xff212121),
+                                         fontSize = 13.sp,
+                                     ),
+                                 )
+                             }
+                             else {
+                                 Text(
+                                     modifier = Modifier
+                                         .padding(
+                                             vertical = 3.dp, horizontal = 10.dp
+                                         ),
+
+                                     text = "Select Section",
+                                     style = TextStyle(
+                                         color = Color.Gray.copy(alpha = 0.2f)
+
+                                     ),
+                                 )
+                             }
+                             IconButton(onClick = {
+                                 viewModel.isExpandedSection.value =
+                                     !viewModel.isExpandedSection.value
+                             }) {
+                                 Icon(
+                                     imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
+                                 )
+                             }
+
+                         }
+
+                         DropdownMenu(modifier = Modifier.width(screenWidthDp * .45f),
+                             expanded =  viewModel.isExpandedSection.value,
+                             onDismissRequest = {  viewModel.isExpandedSection.value = false })
+                         {
+                            /* OutlinedTextField(
+                                 value =  viewModel.searchTxt.value,
+                                 onValueChange = viewModel::onChangeSearchTxt,
+                                 modifier = Modifier,
+                                 leadingIcon = {
+                                     Icon(
+                                         Icons.Default.Search,
+                                         contentDescription = "",
+                                         modifier = Modifier
+                                             .padding(15.dp)
+                                             .size(24.dp)
+                                     )
+                                 },
+                                 singleLine = true,
+                             )*/
+
+                            /* viewModel.products.forEach {product ->
+                                 DropdownMenuItem(onClick = {
+                                     viewModel.selectedProduct.value = product
+                                     viewModel.isExpandedItem.value = false
+                                 }) {
+                                     Text(text = product.productName)
+                                 }
+                             }*/
+
+                                viewModel.sectionDetails.collectAsState().value.forEach { section ->
+                                   DropdownMenuItem(onClick = {
+                                       viewModel.selectSection.value = section
+                                       viewModel.isExpandedSection.value = false
+                                   }) {
+                                       Text(text = section.sectionName)
+                                   }
+
+                               }
+
+
+
+                         }
+
+
+
+                     }
+
+
+
+                 }
+
+
+                 Box(
+                     modifier = Modifier.weight(1f),
+                     contentAlignment = Alignment.Center
+                 ) {
+
+                     Surface(
+                         shape = RoundedCornerShape(4.dp),
+                         border = BorderStroke(1.dp, Color.LightGray),
+                         modifier = Modifier
+                             .width(screenWidthDp * .45f)
+                             .height(55.dp),
+
+                         ) {
+                         Row(
+                             horizontalArrangement = Arrangement.SpaceBetween,
+                             verticalAlignment = Alignment.CenterVertically
+                         ) {
+
+
+                             if (viewModel.selectedItem.value != null) {
+                                 Text(
+                                     modifier = Modifier.padding(
+                                         vertical = 3.dp, horizontal = 10.dp
+                                     ),
+                                     text = viewModel.selectedItem.value!!.subsectionName,
+                                     style = TextStyle(
+                                         color = Color(0xff212121),
+                                         fontSize = 13.sp,
+                                     ),
+                                 )
+                             }
+                             else {
+                                 Text(
+                                     modifier = Modifier
+                                         .padding(
+                                             vertical = 3.dp, horizontal = 10.dp
+                                         ),
+
+                                     text = "Select Subsection",
+                                     style = TextStyle(
+                                         color = Color.Gray.copy(alpha = 0.2f)
+
+                                     ),
+                                 )
+                             }
+                             IconButton(onClick = {
+                                 viewModel.isExpandedSubsection.value =
+                                     !viewModel.isExpandedSubsection.value
+                             }) {
+                                 Icon(
+                                     imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
+                                 )
+                             }
+
+                         }
+
+                         DropdownMenu(modifier = Modifier.width(screenWidthDp * .45f),
+                             expanded =  viewModel.isExpandedSubsection.value,
+                             onDismissRequest = {  viewModel.isExpandedSubsection.value = false })
+                         {
+                            /* OutlinedTextField(
+                                 value =  viewModel.searchTxt.value,
+                                 onValueChange = viewModel::onChangeSearchTxt,
+                                 modifier = Modifier,
+                                 leadingIcon = {
+                                     Icon(
+                                         Icons.Default.Search,
+                                         contentDescription = "",
+                                         modifier = Modifier
+                                             .padding(15.dp)
+                                             .size(24.dp)
+                                     )
+                                 },
+                                 singleLine = true,
+                             )*/
+
+                            /* viewModel.products.forEach {product ->
+                                 DropdownMenuItem(onClick = {
+                                     viewModel.selectedProduct.value = product
+                                     viewModel.isExpandedItem.value = false
+                                 }) {
+                                     Text(text = product.productName)
+                                 }
+                             }*/
+
+
+                                viewModel.subsectionDetails.collectAsState().value.forEach { subsection ->
+                                   DropdownMenuItem(onClick = {
+                                       viewModel.selectedItem.value = subsection
+                                       viewModel.isExpandedSubsection.value = false
+                                   }) {
+                                       Text(text = subsection.subsectionName)
+                                   }
+
+                               }
+
+
+                         }
+
+
+
+                     }
+
+
+
+                 }
+             }
 
         }
 
@@ -419,7 +642,7 @@ fun AddIssueSection(
         StrickyButton(
             enable = viewModel.enableBtn.value,
             loading = viewModel.addLoading.value,
-            action = { },
+            action = viewModel::SubmitIssue,
             name = R.string.submitNow)
     }
 }
