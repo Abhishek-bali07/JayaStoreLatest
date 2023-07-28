@@ -19,6 +19,11 @@ class MainActivity : ComponentActivity(){
     private val baseViewModel by viewModels<BaseViewModel>()
 
 
+    override fun onStart() {
+        super.onStart()
+        baseViewModel.connectivity.listeningNetworkState()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,6 +42,13 @@ class MainActivity : ComponentActivity(){
                 }
             }
         }
+    }
+
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        baseViewModel.connectivity.stopListenNetworkState()
     }
 
 }

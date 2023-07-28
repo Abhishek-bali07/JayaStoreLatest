@@ -15,6 +15,7 @@ import com.jaya.app.store.core.usecase.SplashUseCase
 import com.jaya.app.store.core.utils.helper.AppNavigator
 import com.jaya.app.store.presentation.states.Dialog
 import com.jaya.app.store.presentation.states.castValueToRequiredTypes
+import com.jaya.app.store.utils.helper_impl.AppConnectivity
 import com.jaya.app.store.utils.helper_impl.SavableMutableState
 import com.jaya.app.store.utils.helper_impl.UiData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,18 +31,19 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private  val appNavigator: AppNavigator,
     private val splashUseCases: SplashUseCase,
-  //  private val connectivity: AppConnectivity,
+    private val connectivity: AppConnectivity,
     savedStateHandle: SavedStateHandle
 ) :ViewModel() {
 
 
     val splashAnimation = mutableStateOf(false)
 
-//    val connectivityStatus = connectivity.connectivityStatusFlow
+    val connectivityStatus = connectivity.connectivityStatusFlow
 
     init {
+        connectivity.listeningNetworkState()
         viewModelScope.launch {
-            //splashAnimation()
+            splashAnimation()
             checkAppVersion()
             checkIntroStatus()
 
@@ -174,5 +176,8 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-
+    override fun onCleared() {
+        connectivity.stopListenNetworkState()
+        super.onCleared()
+    }
 }

@@ -91,11 +91,15 @@ fun SplashScreen(
             )
 
         }
-       /* Column( modifier = Modifier
+
+
+
+        Column( modifier = Modifier
             .wrapContentHeight()
             .padding(vertical = 12.dp)
             .align(Alignment.BottomCenter),
-            horizontalAlignment = Alignment.CenterHorizontally) {
+            horizontalAlignment = Alignment.CenterHorizontally)
+        {
 
             splashViewModel.connectivityStatus.collectAsState().apply {
                 when (value) {
@@ -119,7 +123,7 @@ fun SplashScreen(
                     }
                 }
             }
-        }*/
+        }
     }
 
 
