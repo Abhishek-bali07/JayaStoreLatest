@@ -140,7 +140,18 @@ class IssueProductViewModel @Inject constructor(
                 delay(200L)
                 enableBtn.setValue(
                     when{
-
+                        itemNumber.value.isEmpty() ->{
+                            false
+                        }
+                       orderBy.value.isEmpty() ->{
+                            false
+                        }
+                        takingName.value.isEmpty() ->{
+                            false
+                        }
+                        where.value.isEmpty() ->{
+                            false
+                        }
                         else -> true
                     }
                 )
@@ -158,6 +169,8 @@ class IssueProductViewModel @Inject constructor(
                         searchProduct.addAll(data)
                         products.clear()
                         products.addAll(data)
+
+
                    /*     _productDetails.update { emptyList() }
                         _productDetails.update { data }*/
 

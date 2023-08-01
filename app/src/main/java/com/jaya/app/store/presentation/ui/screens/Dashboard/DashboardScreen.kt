@@ -85,6 +85,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
 import com.jaya.app.store.presentation.states.DrawerMenuItem
@@ -105,6 +106,8 @@ fun DashBoardScreen(
     var rowSize by remember {
         mutableStateOf(IntSize.Zero)
     }
+    val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
+    val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
 
     val dashboardDrawerState = androidx.compose.material3.rememberDrawerState(initialValue = DrawerValue.Closed)
     val uiScope = rememberCoroutineScope()
@@ -207,15 +210,17 @@ fun DashBoardScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Surface(modifier = Modifier
+                            Surface(modifier = Modifier.clickable { viewModel.addProduct() }
                                 .padding(10.dp)
-                                .size(width = 180.dp, height = 24.dp)
+                                .width(screenWidthDp * .44f)
+                                .height(screenHeightDp * .06f)
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(color = Color(0xffFFEB56)),
-                                onClick = {
+                                /*onClick = {
                                     viewModel.addProduct()
 
-                                })
+                                }*/
+                            )
                             {
                                 Row(
                                     modifier = Modifier.background(color = Color(0xffFFEB56)),
@@ -245,14 +250,15 @@ fun DashBoardScreen(
 
                             }
 
-                            Surface(modifier = Modifier
+                            Surface(modifier = Modifier.clickable { viewModel.issueProduct() }
                                 .padding(10.dp)
-                                .size(width = 180.dp, height = 24.dp)
+                                .width(screenWidthDp * .60f)
+                                .height(screenHeightDp * .06f)
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(color = Color(0xffFFEB56)),
-                                onClick = {
+                                /*onClick = {
                                     viewModel.issueProduct()
-                                }
+                                }*/
 
                             )
                             {
@@ -504,10 +510,11 @@ fun ProductItem(
         elevation = 4.dp
     ){
         Column(modifier = Modifier
-            .padding(5.dp), verticalArrangement = Arrangement.Top,
+            .padding(5.dp), verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
 
             ) {
-            Row(modifier = Modifier, horizontalArrangement = Arrangement.Start) {
+            Row(modifier = Modifier.align(alignment = Alignment.Start)) {
                 Text(
                     text = product.productQty,
                     style = TextStyle(
@@ -527,14 +534,24 @@ fun ProductItem(
                     .align(alignment = Alignment.CenterHorizontally)
             )
 
-            Row(modifier = Modifier.align(alignment = Alignment.CenterHorizontally)) {
+            Column(modifier = Modifier.padding(horizontal = 10.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
-                    text = product.productTitle,
+                    text = product.productTitle, maxLines = 1,
                     style = TextStyle(
                         color = Color(0xff222222),fontSize = 12.sp, fontWeight = FontWeight.W500)
                 )
+
+
+                Text(
+                    text = product.productValue,
+                    style = TextStyle(
+                        color = Color(0xffFF4155),fontSize = 10.sp,)
+                )
             }
-            Row(modifier = Modifier
+            /*Row(modifier = Modifier
                 .align(alignment = Alignment.CenterHorizontally)
                 .padding(5.dp)) {
                 Text(
@@ -542,7 +559,7 @@ fun ProductItem(
                     style = TextStyle(
                         color = Color(0xffFF4155),fontSize = 10.sp,), textAlign = TextAlign.Center
                 )
-            }
+            }*/
 
 
 

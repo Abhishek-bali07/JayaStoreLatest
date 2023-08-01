@@ -230,7 +230,7 @@ fun AddIssueSection(
 
                             )
                         )
-                    },
+                    }, maxLines = 1,
                     trailingIcon = {},
                     onValueChange = viewModel::onChangeItemNumber,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -255,6 +255,7 @@ fun AddIssueSection(
                         )
                     )
                 },
+                maxLines = 1,
                 trailingIcon = {},
                 onValueChange = viewModel::onChangeOrder,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -273,6 +274,7 @@ fun AddIssueSection(
                     .padding(horizontal = 22.dp, vertical = 5.dp)
                     .size(height = 55.dp, width = 300.dp),
                 value =viewModel.takingName.value,
+                maxLines = 1,
                 placeholder = {
                     Text(
                         text = "Taken By Name", style = TextStyle(
@@ -296,7 +298,7 @@ fun AddIssueSection(
                     .fillMaxWidth()
                     .padding(horizontal = 22.dp, vertical = 5.dp)
                     .size(height = 55.dp, width = 300.dp),
-                value =viewModel.where.value,
+                value =viewModel.where.value, maxLines = 1,
                 placeholder = {
                     Text(
                         text = "Where", style = TextStyle(

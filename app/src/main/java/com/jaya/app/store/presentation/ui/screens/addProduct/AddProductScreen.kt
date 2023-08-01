@@ -52,7 +52,8 @@ fun AddProductScreen(
         scaffoldState = scaffoldState
     ) {paddingValues ->
         Column(
-            modifier = Modifier.statusBarColor(color =Color(0xffFFEB56) )
+            modifier = Modifier
+                .statusBarColor(color = Color(0xffFFEB56))
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
@@ -213,7 +214,9 @@ fun AddProductSection(
                         }
                     }
 
-                    DropdownMenu(modifier = Modifier.width(screenWidthDp * .90f).padding(horizontal = 20.dp),
+                    DropdownMenu(modifier = Modifier
+                        .width(screenWidthDp * .90f)
+                        .padding(horizontal = 20.dp),
                         expanded = addProductViewModel.isSourceExpanded.value,
                         onDismissRequest = { addProductViewModel.isSourceExpanded.value = false }) {
 
@@ -232,10 +235,13 @@ fun AddProductSection(
                 }
             }
 
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp)){
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp)){
 
                 OutlinedTextField(
-                    modifier = Modifier.width(screenWidthDp * .30f)
+                    modifier = Modifier
+                        .width(screenWidthDp * .30f)
                         .padding(horizontal = 5.dp)
                         .height(height = 55.dp),
                     value =addProductViewModel.basic.value,
@@ -313,7 +319,9 @@ fun AddProductSection(
                             }
                         }
 
-                        DropdownMenu(modifier = Modifier.width(140.dp).padding(10.dp),
+                        DropdownMenu(modifier = Modifier
+                            .width(140.dp)
+                            .padding(10.dp),
                             expanded = addProductViewModel.isItemExpanded.value,
                             onDismissRequest = { addProductViewModel.isItemExpanded.value = false },
 
@@ -335,7 +343,8 @@ fun AddProductSection(
                 }
 
                 OutlinedTextField(
-                    modifier = Modifier.width(screenWidthDp * .30f)
+                    modifier = Modifier
+                        .width(screenWidthDp * .30f)
                         .padding(horizontal = 5.dp)
                         .height(height = 55.dp),
                     value =addProductViewModel.rate.value,
@@ -348,7 +357,9 @@ fun AddProductSection(
                         )
                     },
                     trailingIcon = {
-                        Icon(painter = R.drawable.rupee.resourceImage(), contentDescription = "", tint = Color.Gray.copy(alpha = 0.2f), modifier = Modifier.size(25.dp))
+                        Icon(painter = R.drawable.rupee.resourceImage(),
+                            contentDescription = "",
+                            tint = Color.Gray.copy(alpha = 0.2f), modifier = Modifier.size(25.dp))
                     },
                     onValueChange = addProductViewModel::onChangeRate,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -360,10 +371,40 @@ fun AddProductSection(
             }
 
 
-            Row(modifier = Modifier.fillMaxWidth().padding(15.dp)){
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)){
+                OutlinedTextField(
+                    modifier = Modifier
+                        .width(screenWidthDp * .50f)
+                        .padding(horizontal = 5.dp)
+                        .height(height = 55.dp),
+                    value =addProductViewModel.quantity.value,
+                    placeholder = {
+                        Text(
+                            text = "Enter Quantity", style = TextStyle(
+                                color = Color.Gray.copy(alpha = 0.2f)
+
+                            )
+                        )
+                    },
+                    trailingIcon = {
+                    }, maxLines = 1,
+                    onValueChange = addProductViewModel::onChangeQuantity,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color.LightGray,
+                        unfocusedBorderColor =  Color.LightGray,
+                    )
+                )
+            }
+
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp)){
 
                 OutlinedTextField(
-                    modifier = Modifier.width(screenWidthDp * .50f)
+                    modifier = Modifier
+                        .width(screenWidthDp * .50f)
                         .padding(horizontal = 5.dp)
                         .height(height = 55.dp),
                     value =addProductViewModel.quantity.value,
@@ -386,7 +427,8 @@ fun AddProductSection(
 
 
                 OutlinedTextField(
-                    modifier = Modifier.width(screenWidthDp * .50f)
+                    modifier = Modifier
+                        .width(screenWidthDp * .50f)
                         .padding(horizontal = 5.dp)
                         .height(height = 55.dp),
                     value =addProductViewModel.state.value,
