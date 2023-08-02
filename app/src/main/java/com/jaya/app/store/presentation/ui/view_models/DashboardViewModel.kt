@@ -142,7 +142,7 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             delay(400L)
             searchProduct.filter {
-                if (it.productTitle != null){
+                if (it.productTitle.isNotEmpty()){
                     return@filter it.productTitle.lowercase().contains(search.lowercase())
                 }
                 false
@@ -171,18 +171,17 @@ class DashboardViewModel @Inject constructor(
 
 
     private fun navigateToMenu(menu: DrawerMenus) {
-       /* when (menu) {
-
-
+        when(menu){
             DrawerMenus.Logout -> {
-                useCases.logout().onEach {
+                dashboardUseCase.logout().onEach {
                     when (it.type) {
-                        EntryType.NAVIGATE -> {
-                            it.data?.castValueToRequiredTypes<Navigation>()?.apply {
-                                navigator.popAndNavigate(
-                                    destination = destination.toDestination(),
-                                    singleTop = singleTop,
-                                    inclusive = popUpto
+                        EmitType.NAVIGATE -> {
+                            it.value?.castValueToRequiredTypes<Destination.NoArgumentsDestination>()?.let { destination ->
+                                appNavigator.tryNavigateTo(
+                                    destination(),
+                                    popUpToRoute = "",
+                                    inclusive = true,
+                                    isSingleTop = true
                                 )
                             }
                         }
@@ -191,7 +190,10 @@ class DashboardViewModel @Inject constructor(
                     }
                 }.launchIn(viewModelScope)
             }
-        }*/
+
+            else -> {}
+        }
+
     }
 
 }

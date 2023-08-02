@@ -9,7 +9,7 @@ interface AppStore {
 
     suspend fun userId(): String
 
-    suspend fun logout()
+    suspend fun logout() :Boolean
 
     suspend fun isLoggedIn(): Boolean
 

@@ -1,6 +1,7 @@
 package com.jaya.app.store.presentation.ui.screens.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -48,7 +50,7 @@ fun ColumnScope.ImageSection() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .weight(1f),
+            .weight(.8f),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     )
@@ -57,7 +59,7 @@ fun ColumnScope.ImageSection() {
             painter = painterResource(id =R.drawable.jayalogo),
             contentDescription = "",
             modifier = Modifier
-                .fillMaxWidth(fraction = .8f)
+                .fillMaxWidth(fraction = .7f)
                 .padding(vertical = 20.dp)
         )
         androidx.compose.material.Text(
@@ -80,7 +82,7 @@ private fun ColumnScope.OtpInputSection(mobileViewModel: MobileViewModel) {
             .fillMaxWidth()
             .weight(1.2f),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+      //  verticalArrangement = Arrangement.Start
     ) {
         Text(
             text = R.string.verifyOtp.resourceString(),
@@ -88,7 +90,7 @@ private fun ColumnScope.OtpInputSection(mobileViewModel: MobileViewModel) {
         )
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(fraction = .9f),
+            modifier = Modifier.fillMaxWidth(fraction = .9f).padding(vertical = 5.dp),
             maxLines = 1,
             shape = RoundedCornerShape(12.dp),
             textStyle = MaterialTheme.appTextStyles.mobileNumberStyle,
@@ -126,9 +128,7 @@ private fun ColumnScope.OtpInputSection(mobileViewModel: MobileViewModel) {
         AppButton(
             enable = mobileViewModel.venableBtn.value,
             loading = mobileViewModel.loading.value,
-            action = {
-                mobileViewModel.appLogin()
-            },
+            action = { mobileViewModel.appLogin() },
             name = R.string.verify
         )
 

@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
@@ -43,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jaya.app.store.R
 import com.jaya.app.store.core.common.enums.EmitType
+import com.jaya.app.store.presentation.states.Image
 import com.jaya.app.store.presentation.states.resourceImage
 import com.jaya.app.store.presentation.states.statusBarColor
 import com.jaya.app.store.presentation.ui.custom_composable.StrickyButton
@@ -57,32 +60,36 @@ fun IssueProductScreen(
 ){
     val scaffoldState = rememberScaffoldState()
 
-    Scaffold(scaffoldState = scaffoldState) {paddingValues ->
-       Column(modifier = Modifier.statusBarColor(Color(0xffFFEB56))
-           .padding(paddingValues)
-           .fillMaxSize()) {
-           TopAppBar(
-               backgroundColor = Color(0xffFFEB56),
-               elevation = 2.dp, title = {
-                   Text(
-                       "Issue an item", modifier = Modifier.fillMaxWidth(), style = TextStyle(
-                           color = Color.Black, fontSize = 20.sp,
-                       )
-                   )
-               },
-               navigationIcon = {
-                   IconButton(onClick = {
+    Scaffold(scaffoldState = scaffoldState)
+    {paddingValues ->
+        Column(modifier = Modifier.statusBarColor(Color(0xffFFEB56))
+            .padding(paddingValues)
+            .fillMaxSize())
+        {
+            TopAppBar(
+                backgroundColor = Color(0xffFFEB56),
+                elevation = 2.dp, title = {
+                    Text(
+                        "Issue an item", modifier = Modifier.fillMaxWidth(), style = TextStyle(
+                            color = Color.Black, fontSize = 20.sp,
+                        )
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
                         viewModel.appNavigator.tryNavigateBack()
-                   }) {
-                       Icon( modifier = Modifier
-                           .size(40.dp)
-                           .padding(horizontal = 8.dp),
-                           painter = R.drawable.backbutton.resourceImage(),
-                           contentDescription ="" )
-                   }
-               })
-           AddIssueSection(viewModel,baseViewModel)
-       }
+                    }) {
+                        Icon( modifier = Modifier
+                            .size(40.dp)
+                            .padding(horizontal = 8.dp),
+                            painter = R.drawable.backbutton.resourceImage(),
+                            contentDescription ="" )
+                    }
+                })
+            AddIssueSection(viewModel,baseViewModel)
+        }
+
+
     }
 }
 
@@ -91,36 +98,270 @@ fun AddIssueSection(
     viewModel: IssueProductViewModel,
     baseViewModel: BaseViewModel)
 {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
 
-
-
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f),){
+    if (viewModel.pageLoading){
+           Column(
+               modifier = Modifier.fillMaxSize(),
+               horizontalAlignment = Alignment.CenterHorizontally,
+               verticalArrangement = Arrangement.Center
+           ) {
+               Box(
+                   modifier = Modifier.size(150.dp), contentAlignment = Alignment.Center
+               ) {
+                   Surface(modifier = Modifier.fillMaxSize(),
+                       shape = CircleShape,
+                       color = Color(0xFFF9F9F9),
+                       content = {})
+                   CircularProgressIndicator(
+                       color = Color.Red, modifier = Modifier.fillMaxSize()
+                   )
+                   R.drawable.jayalogo.Image(modifier = Modifier.size(100.dp))
+               }
+           }
+       }
+       else{
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
 
 
-            Row(modifier = Modifier
+
+            Column(modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 18.dp, vertical = 5.dp), horizontalArrangement = Arrangement.SpaceBetween
+                .weight(1f),){
+
+                val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
+
+
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 18.dp, vertical = 5.dp), horizontalArrangement = Arrangement.SpaceBetween
                 )
-            {
+                {
+                    Box(
+                        modifier = Modifier,
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            border = BorderStroke(1.dp, Color.LightGray),
+                            modifier = Modifier
+                                .width(screenWidthDp * .60f)
+                                .height(55.dp),
+
+                            ) {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+
+
+                                if (viewModel.selectedProduct.value != null) {
+                                    Text(
+                                        modifier = Modifier.padding(
+                                            vertical = 3.dp, horizontal = 10.dp
+                                        ),
+                                        text = viewModel.selectedProduct.value!!.productName,
+                                        style = TextStyle(
+                                            color = Color(0xff212121),
+                                            fontSize = 13.sp,
+                                        ),
+                                    )
+                                }
+                                else {
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(
+                                                vertical = 3.dp, horizontal = 10.dp
+                                            ),
+
+                                        text = "Select Product",
+                                        style = TextStyle(
+                                            color = Color.Gray.copy(alpha = 0.2f)
+
+                                        ),
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    viewModel.isExpandedItem.value =
+                                        !viewModel.isExpandedItem.value
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
+                                    )
+                                }
+
+                            }
+
+                            DropdownMenu(modifier = Modifier.width(250.dp),
+                                expanded =  viewModel.isExpandedItem.value,
+                                onDismissRequest = {  viewModel.isExpandedItem.value = false })
+                            {
+                                OutlinedTextField(
+                                    value =  viewModel.searchTxt.value,
+                                    onValueChange = viewModel::onChangeSearchTxt,
+                                    modifier = Modifier,
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Default.Search,
+                                            contentDescription = "",
+                                            modifier = Modifier
+                                                .padding(15.dp)
+                                                .size(24.dp)
+                                        )
+                                    },
+                                    singleLine = true,
+                                )
+
+                                /*   EmitType.productDetails.collectAsState().value.forEach { product ->
+                                      DropdownMenuItem(onClick = {
+                                          viewModel.selectedProduct.value = product
+                                          viewModel.isExpandedItem.value = false
+                                      }) {
+                                          Text(text = product.productName)
+                                      }
+
+                                  }*/
+                                viewModel.products.forEach {product ->
+                                    DropdownMenuItem(onClick = {
+                                        viewModel.selectedProduct.value = product
+                                        viewModel.isExpandedItem.value = false
+                                    }) {
+                                        Text(text = product.productName)
+                                    }
+                                }
+
+
+                            }
+
+
+
+                        }
+
+
+
+                    }
+
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .padding(horizontal = 5.dp)
+                            .width(screenWidthDp * .30f)
+                            .height(55.dp),
+                        value =viewModel.itemNumber.value,
+                        placeholder = {
+                            Text(
+                                text = "Enter NOS", style = TextStyle(
+                                    color = Color.Gray.copy(alpha = 0.2f)
+
+                                )
+                            )
+                        }, maxLines = 1,
+                        trailingIcon = {},
+                        onValueChange = viewModel::onChangeItemNumber,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.LightGray,
+                            unfocusedBorderColor =  Color.LightGray,
+                        )
+                    )
+                }
+
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 22.dp, vertical = 10.dp)
+                        .height(height = 55.dp),
+                    value =viewModel.orderBy.value,
+                    placeholder = {
+                        Text(
+                            text = "Order By", style = TextStyle(
+                                color = Color.Gray.copy(alpha = 0.2f)
+
+                            )
+                        )
+                    },
+                    maxLines = 1,
+                    trailingIcon = {},
+                    onValueChange = viewModel::onChangeOrder,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color.LightGray,
+                        unfocusedBorderColor =  Color.LightGray,
+                    )
+                )
+
+
+
+
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 22.dp, vertical = 5.dp)
+                        .size(height = 55.dp, width = 300.dp),
+                    value =viewModel.takingName.value,
+                    maxLines = 1,
+                    placeholder = {
+                        Text(
+                            text = "Taken By Name", style = TextStyle(
+                                color = Color.Gray.copy(alpha = 0.2f)
+
+                            )
+                        )
+                    },
+                    trailingIcon = {},
+                    onValueChange = viewModel::onChangeTakingName,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color.LightGray,
+                        unfocusedBorderColor =  Color.LightGray,
+                    )
+                )
+
+
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 22.dp, vertical = 5.dp)
+                        .size(height = 55.dp, width = 300.dp),
+                    value =viewModel.where.value, maxLines = 1,
+                    placeholder = {
+                        Text(
+                            text = "Where", style = TextStyle(
+                                color = Color.Gray.copy(alpha = 0.2f)
+
+                            )
+                        )
+                    },
+                    trailingIcon = {},
+                    onValueChange = viewModel::onChangeAskedName,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color.LightGray,
+                        unfocusedBorderColor =  Color.LightGray,
+                    )
+                )
+
+
+
+
+
+
+
                 Box(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Surface(
                         shape = RoundedCornerShape(4.dp),
                         border = BorderStroke(1.dp, Color.LightGray),
                         modifier = Modifier
-                            .width(screenWidthDp * .60f)
+                            .width(screenWidthDp * .90f)
                             .height(55.dp),
 
                         ) {
@@ -128,14 +369,12 @@ fun AddIssueSection(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-
-
-                            if (viewModel.selectedProduct.value != null) {
+                            if (viewModel.selectPlant.value != null) {
                                 Text(
                                     modifier = Modifier.padding(
                                         vertical = 3.dp, horizontal = 10.dp
                                     ),
-                                    text = viewModel.selectedProduct.value!!.productName,
+                                    text = viewModel.selectPlant.value!!.plantName,
                                     style = TextStyle(
                                         color = Color(0xff212121),
                                         fontSize = 13.sp,
@@ -145,36 +384,40 @@ fun AddIssueSection(
                             else {
                                 Text(
                                     modifier = Modifier
+                                        .weight(2f)
                                         .padding(
                                             vertical = 3.dp, horizontal = 10.dp
                                         ),
 
-                                    text = "Select Product",
+                                    text = "Select Plant",
                                     style = TextStyle(
                                         color = Color.Gray.copy(alpha = 0.2f)
 
                                     ),
                                 )
                             }
+
+
                             IconButton(onClick = {
-                                viewModel.isExpandedItem.value =
-                                    !viewModel.isExpandedItem.value
+                                viewModel.isExpandedPlant.value =
+                                    !viewModel.isExpandedPlant.value
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
                                 )
                             }
-
                         }
 
-                        DropdownMenu(modifier = Modifier.width(250.dp),
-                            expanded =  viewModel.isExpandedItem.value,
-                            onDismissRequest = {  viewModel.isExpandedItem.value = false })
-                        {
+                        DropdownMenu(modifier = Modifier
+                            .width(screenWidthDp * .90f)
+                            .padding(horizontal = 20.dp),
+                            expanded = viewModel.isExpandedPlant.value,
+                            onDismissRequest = { viewModel.isExpandedPlant.value = false }) {
+
                             OutlinedTextField(
-                                value =  viewModel.searchTxt.value,
-                                onValueChange = viewModel::onChangeSearchTxt,
-                                modifier = Modifier,
+                                value =  viewModel.plantSearchTxt.value,
+                                onValueChange = viewModel::onChangePlantTxt,
+                                modifier = Modifier.width(screenWidthDp * .90f),
                                 leadingIcon = {
                                     Icon(
                                         Icons.Default.Search,
@@ -187,466 +430,256 @@ fun AddIssueSection(
                                 singleLine = true,
                             )
 
-                          /*   EmitType.productDetails.collectAsState().value.forEach { product ->
+                            viewModel.plants.forEach { plant ->
                                 DropdownMenuItem(onClick = {
-                                    viewModel.selectedProduct.value = product
-                                    viewModel.isExpandedItem.value = false
+
+                                    viewModel.selectPlant.value = plant
+                                    viewModel.isExpandedPlant.value = false
                                 }) {
-                                    Text(text = product.productName)
+                                    Text(text = plant.plantName)
                                 }
 
-                            }*/
-                            viewModel.products.forEach {product ->
-                                DropdownMenuItem(onClick = {
-                                            viewModel.selectedProduct.value = product
-                                            viewModel.isExpandedItem.value = false
-                                }) {
-                                    Text(text = product.productName)
-                                }
-                            }
-
-
-                        }
-
-
-
-                    }
-
-
-
-                }
-
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .padding(horizontal = 5.dp)
-                        .width(screenWidthDp * .30f)
-                        .height(55.dp),
-                    value =viewModel.itemNumber.value,
-                    placeholder = {
-                        Text(
-                            text = "Enter NOS", style = TextStyle(
-                                color = Color.Gray.copy(alpha = 0.2f)
-
-                            )
-                        )
-                    }, maxLines = 1,
-                    trailingIcon = {},
-                    onValueChange = viewModel::onChangeItemNumber,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color.LightGray,
-                        unfocusedBorderColor =  Color.LightGray,
-                    )
-                )
-            }
-
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 22.dp, vertical = 10.dp)
-                    .height(height = 55.dp),
-                value =viewModel.orderBy.value,
-                placeholder = {
-                    Text(
-                        text = "Order By", style = TextStyle(
-                            color = Color.Gray.copy(alpha = 0.2f)
-
-                        )
-                    )
-                },
-                maxLines = 1,
-                trailingIcon = {},
-                onValueChange = viewModel::onChangeOrder,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.LightGray,
-                    unfocusedBorderColor =  Color.LightGray,
-                )
-            )
-            
-
-
-
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 22.dp, vertical = 5.dp)
-                    .size(height = 55.dp, width = 300.dp),
-                value =viewModel.takingName.value,
-                maxLines = 1,
-                placeholder = {
-                    Text(
-                        text = "Taken By Name", style = TextStyle(
-                            color = Color.Gray.copy(alpha = 0.2f)
-
-                        )
-                    )
-                },
-                trailingIcon = {},
-                onValueChange = viewModel::onChangeTakingName,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.LightGray,
-                    unfocusedBorderColor =  Color.LightGray,
-                )
-            )
-
-
-
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 22.dp, vertical = 5.dp)
-                    .size(height = 55.dp, width = 300.dp),
-                value =viewModel.where.value, maxLines = 1,
-                placeholder = {
-                    Text(
-                        text = "Where", style = TextStyle(
-                            color = Color.Gray.copy(alpha = 0.2f)
-
-                        )
-                    )
-                },
-                trailingIcon = {},
-                onValueChange = viewModel::onChangeAskedName,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.LightGray,
-                    unfocusedBorderColor =  Color.LightGray,
-                )
-            )
-
-
-
-
-
-
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(4.dp),
-                    border = BorderStroke(1.dp, Color.LightGray),
-                    modifier = Modifier
-                        .width(screenWidthDp * .90f)
-                        .height(55.dp),
-
-                    ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (viewModel.selectPlant.value != null) {
-                            Text(
-                                modifier = Modifier.padding(
-                                    vertical = 3.dp, horizontal = 10.dp
-                                ),
-                                text = viewModel.selectPlant.value!!.plantName,
-                                style = TextStyle(
-                                    color = Color(0xff212121),
-                                    fontSize = 13.sp,
-                                ),
-                            )
-                        }
-                        else {
-                            Text(
-                                modifier = Modifier
-                                    .weight(2f)
-                                    .padding(
-                                        vertical = 3.dp, horizontal = 10.dp
-                                    ),
-
-                                text = "Select Plant",
-                                style = TextStyle(
-                                    color = Color.Gray.copy(alpha = 0.2f)
-
-                                ),
-                            )
-                        }
-
-
-                        IconButton(onClick = {
-                            viewModel.isExpandedPlant.value =
-                                !viewModel.isExpandedPlant.value
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
-                            )
-                        }
-                    }
-
-                    DropdownMenu(modifier = Modifier
-                        .width(screenWidthDp * .90f)
-                        .padding(horizontal = 20.dp),
-                        expanded = viewModel.isExpandedPlant.value,
-                        onDismissRequest = { viewModel.isExpandedPlant.value = false }) {
-
-                        OutlinedTextField(
-                            value =  viewModel.plantSearchTxt.value,
-                            onValueChange = viewModel::onChangePlantTxt,
-                            modifier = Modifier.width(screenWidthDp * .90f),
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Default.Search,
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .padding(15.dp)
-                                        .size(24.dp)
-                                )
-                            },
-                            singleLine = true,
-                        )
-
-                       viewModel.plants.forEach { plant ->
-                            DropdownMenuItem(onClick = {
-
-                                viewModel.selectPlant.value = plant
-                               viewModel.isExpandedPlant.value = false
-                            }) {
-                                Text(text = plant.plantName)
                             }
 
                         }
-
                     }
                 }
-            }
 
-             Row(modifier = Modifier
-                 .fillMaxWidth()
-                 .padding(horizontal = 18.dp, vertical = 5.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 18.dp, vertical = 5.dp), horizontalArrangement = Arrangement.SpaceBetween) {
 
 
-                 Box(
-                     modifier = Modifier.weight(1f),
-                     contentAlignment = Alignment.Center
-                 ) {
 
-                     Surface(
-                         shape = RoundedCornerShape(4.dp),
-                         border = BorderStroke(1.dp, Color.LightGray),
-                         modifier = Modifier
-                             .width(screenWidthDp * .45f)
-                             .height(55.dp),
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
 
-                         ) {
-                         Row(
-                             horizontalArrangement = Arrangement.SpaceBetween,
-                             verticalAlignment = Alignment.CenterVertically
-                         ) {
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            border = BorderStroke(1.dp, Color.LightGray),
+                            modifier = Modifier
+                                .width(screenWidthDp * .45f)
+                                .height(55.dp),
+
+                            ) {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
 
-                             if (viewModel.selectSection.value != null) {
-                                 Text(
-                                     modifier = Modifier.padding(
-                                         vertical = 3.dp, horizontal = 10.dp
-                                     ),
-                                     text = viewModel.selectSection.value!!.sectionName,
-                                     style = TextStyle(
-                                         color = Color(0xff212121),
-                                         fontSize = 13.sp,
-                                     ),
-                                 )
-                             }
-                             else {
-                                 Text(
-                                     modifier = Modifier
-                                         .padding(
-                                             vertical = 3.dp, horizontal = 10.dp
-                                         ),
+                                if (viewModel.selectSection.value != null) {
+                                    Text(
+                                        modifier = Modifier.padding(
+                                            vertical = 3.dp, horizontal = 10.dp
+                                        ),
+                                        text = viewModel.selectSection.value!!.sectionName,
+                                        style = TextStyle(
+                                            color = Color(0xff212121),
+                                            fontSize = 13.sp,
+                                        ),
+                                    )
+                                }
+                                else {
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(
+                                                vertical = 3.dp, horizontal = 10.dp
+                                            ),
 
-                                     text = "Select Section",
-                                     style = TextStyle(
-                                         color = Color.Gray.copy(alpha = 0.2f)
+                                        text = "Select Section",
+                                        style = TextStyle(
+                                            color = Color.Gray.copy(alpha = 0.2f)
 
-                                     ),
-                                 )
-                             }
-                             IconButton(onClick = {
-                                 viewModel.isExpandedSection.value =
-                                     !viewModel.isExpandedSection.value
-                             }) {
-                                 Icon(
-                                     imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
-                                 )
-                             }
+                                        ),
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    viewModel.isExpandedSection.value =
+                                        !viewModel.isExpandedSection.value
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
+                                    )
+                                }
 
-                         }
+                            }
 
-                         DropdownMenu(modifier = Modifier.width(screenWidthDp * .45f),
-                             expanded =  viewModel.isExpandedSection.value,
-                             onDismissRequest = {  viewModel.isExpandedSection.value = false })
-                         {
-                            /* OutlinedTextField(
-                                 value =  viewModel.searchTxt.value,
-                                 onValueChange = viewModel::onChangeSearchTxt,
-                                 modifier = Modifier,
-                                 leadingIcon = {
-                                     Icon(
-                                         Icons.Default.Search,
-                                         contentDescription = "",
-                                         modifier = Modifier
-                                             .padding(15.dp)
-                                             .size(24.dp)
-                                     )
-                                 },
-                                 singleLine = true,
-                             )*/
+                            DropdownMenu(modifier = Modifier.width(screenWidthDp * .45f),
+                                expanded =  viewModel.isExpandedSection.value,
+                                onDismissRequest = {  viewModel.isExpandedSection.value = false })
+                            {
+                                /* OutlinedTextField(
+                                     value =  viewModel.searchTxt.value,
+                                     onValueChange = viewModel::onChangeSearchTxt,
+                                     modifier = Modifier,
+                                     leadingIcon = {
+                                         Icon(
+                                             Icons.Default.Search,
+                                             contentDescription = "",
+                                             modifier = Modifier
+                                                 .padding(15.dp)
+                                                 .size(24.dp)
+                                         )
+                                     },
+                                     singleLine = true,
+                                 )*/
 
-                            /* viewModel.products.forEach {product ->
-                                 DropdownMenuItem(onClick = {
-                                     viewModel.selectedProduct.value = product
-                                     viewModel.isExpandedItem.value = false
-                                 }) {
-                                     Text(text = product.productName)
-                                 }
-                             }*/
+                                /* viewModel.products.forEach {product ->
+                                     DropdownMenuItem(onClick = {
+                                         viewModel.selectedProduct.value = product
+                                         viewModel.isExpandedItem.value = false
+                                     }) {
+                                         Text(text = product.productName)
+                                     }
+                                 }*/
 
                                 viewModel.sectionDetails.collectAsState().value.forEach { section ->
-                                   DropdownMenuItem(onClick = {
-                                       viewModel.selectSection.value = section
-                                       viewModel.isExpandedSection.value = false
-                                   }) {
-                                       Text(text = section.sectionName)
-                                   }
+                                    DropdownMenuItem(onClick = {
+                                        viewModel.selectSection.value = section
+                                        viewModel.isExpandedSection.value = false
+                                    }) {
+                                        Text(text = section.sectionName)
+                                    }
 
-                               }
-
-
-
-                         }
+                                }
 
 
 
-                     }
+                            }
 
 
 
-                 }
+                        }
 
 
-                 Box(
-                     modifier = Modifier.weight(1f),
-                     contentAlignment = Alignment.Center
-                 ) {
 
-                     Surface(
-                         shape = RoundedCornerShape(4.dp),
-                         border = BorderStroke(1.dp, Color.LightGray),
-                         modifier = Modifier
-                             .width(screenWidthDp * .45f)
-                             .height(55.dp),
-
-                         ) {
-                         Row(
-                             horizontalArrangement = Arrangement.SpaceBetween,
-                             verticalAlignment = Alignment.CenterVertically
-                         ) {
+                    }
 
 
-                             if (viewModel.selectedItem.value != null) {
-                                 Text(
-                                     modifier = Modifier.padding(
-                                         vertical = 3.dp, horizontal = 10.dp
-                                     ),
-                                     text = viewModel.selectedItem.value!!.subsectionName,
-                                     style = TextStyle(
-                                         color = Color(0xff212121),
-                                         fontSize = 13.sp,
-                                     ),
-                                 )
-                             }
-                             else {
-                                 Text(
-                                     modifier = Modifier
-                                         .padding(
-                                             vertical = 3.dp, horizontal = 10.dp
-                                         ),
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
 
-                                     text = "Select Subsection",
-                                     style = TextStyle(
-                                         color = Color.Gray.copy(alpha = 0.2f)
+                        Surface(
+                            shape = RoundedCornerShape(4.dp),
+                            border = BorderStroke(1.dp, Color.LightGray),
+                            modifier = Modifier
+                                .width(screenWidthDp * .45f)
+                                .height(55.dp),
 
-                                     ),
-                                 )
-                             }
-                             IconButton(onClick = {
-                                 viewModel.isExpandedSubsection.value =
-                                     !viewModel.isExpandedSubsection.value
-                             }) {
-                                 Icon(
-                                     imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
-                                 )
-                             }
+                            ) {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
-                         }
 
-                         DropdownMenu(modifier = Modifier.width(screenWidthDp * .45f),
-                             expanded =  viewModel.isExpandedSubsection.value,
-                             onDismissRequest = {  viewModel.isExpandedSubsection.value = false })
-                         {
-                            /* OutlinedTextField(
-                                 value =  viewModel.searchTxt.value,
-                                 onValueChange = viewModel::onChangeSearchTxt,
-                                 modifier = Modifier,
-                                 leadingIcon = {
-                                     Icon(
-                                         Icons.Default.Search,
-                                         contentDescription = "",
-                                         modifier = Modifier
-                                             .padding(15.dp)
-                                             .size(24.dp)
-                                     )
-                                 },
-                                 singleLine = true,
-                             )*/
+                                if (viewModel.selectedItem.value != null) {
+                                    Text(
+                                        modifier = Modifier.padding(
+                                            vertical = 3.dp, horizontal = 10.dp
+                                        ),
+                                        text = viewModel.selectedItem.value!!.subsectionName,
+                                        style = TextStyle(
+                                            color = Color(0xff212121),
+                                            fontSize = 13.sp,
+                                        ),
+                                    )
+                                }
+                                else {
+                                    Text(
+                                        modifier = Modifier
+                                            .padding(
+                                                vertical = 3.dp, horizontal = 10.dp
+                                            ),
 
-                            /* viewModel.products.forEach {product ->
-                                 DropdownMenuItem(onClick = {
-                                     viewModel.selectedProduct.value = product
-                                     viewModel.isExpandedItem.value = false
-                                 }) {
-                                     Text(text = product.productName)
-                                 }
-                             }*/
+                                        text = "Select Subsection",
+                                        style = TextStyle(
+                                            color = Color.Gray.copy(alpha = 0.2f)
+
+                                        ),
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    viewModel.isExpandedSubsection.value =
+                                        !viewModel.isExpandedSubsection.value
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowDropDown, contentDescription = ""
+                                    )
+                                }
+
+                            }
+
+                            DropdownMenu(modifier = Modifier.width(screenWidthDp * .45f),
+                                expanded =  viewModel.isExpandedSubsection.value,
+                                onDismissRequest = {  viewModel.isExpandedSubsection.value = false })
+                            {
+                                /* OutlinedTextField(
+                                     value =  viewModel.searchTxt.value,
+                                     onValueChange = viewModel::onChangeSearchTxt,
+                                     modifier = Modifier,
+                                     leadingIcon = {
+                                         Icon(
+                                             Icons.Default.Search,
+                                             contentDescription = "",
+                                             modifier = Modifier
+                                                 .padding(15.dp)
+                                                 .size(24.dp)
+                                         )
+                                     },
+                                     singleLine = true,
+                                 )*/
+
+                                /* viewModel.products.forEach {product ->
+                                     DropdownMenuItem(onClick = {
+                                         viewModel.selectedProduct.value = product
+                                         viewModel.isExpandedItem.value = false
+                                     }) {
+                                         Text(text = product.productName)
+                                     }
+                                 }*/
 
 
                                 viewModel.subsectionDetails.collectAsState().value.forEach { subsection ->
-                                   DropdownMenuItem(onClick = {
-                                       viewModel.selectedItem.value = subsection
-                                       viewModel.isExpandedSubsection.value = false
-                                   }) {
-                                       Text(text = subsection.subsectionName)
-                                   }
+                                    DropdownMenuItem(onClick = {
+                                        viewModel.selectedItem.value = subsection
+                                        viewModel.isExpandedSubsection.value = false
+                                    }) {
+                                        Text(text = subsection.subsectionName)
+                                    }
 
-                               }
-
-
-                         }
+                                }
 
 
-
-                     }
+                            }
 
 
 
-                 }
-             }
+                        }
 
+
+
+                    }
+                }
+
+            }
+
+
+
+            StrickyButton(
+                enable = viewModel.enableBtn.value,
+                loading = viewModel.addLoading.value,
+                action = viewModel::SubmitIssue,
+                name = R.string.submitNow)
         }
+       }
 
 
-
-        StrickyButton(
-            enable = viewModel.enableBtn.value,
-            loading = viewModel.addLoading.value,
-            action = viewModel::SubmitIssue,
-            name = R.string.submitNow)
-    }
 }
 
 

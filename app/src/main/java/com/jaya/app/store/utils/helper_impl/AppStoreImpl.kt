@@ -39,13 +39,18 @@ class AppStoreImpl @Inject constructor(
         }.first() ?:  ""
     }
 
-    override suspend fun logout() {
+    override suspend fun logout():Boolean {
+      var logout = false
+
       prefs.edit {
          if (it.contains(stringPreferencesKey(PrefConstants.USER_ID))){
              it.remove(
                  stringPreferencesKey(PrefConstants.USER_ID))
+
+             logout = true
          }
       }
+       return logout
     }
 
     override suspend fun isLoggedIn(): Boolean {

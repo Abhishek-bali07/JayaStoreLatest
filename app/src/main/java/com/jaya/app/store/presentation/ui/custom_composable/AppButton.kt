@@ -44,7 +44,7 @@ fun AppButton (
             Button(
                 onClick = action,
                 modifier = Modifier
-                    .fillMaxWidth(fraction = 0.9f),
+                    .fillMaxWidth(fraction = 0.9f).padding(vertical = 5.dp),
                 elevation = ButtonDefaults.elevation(
                     pressedElevation = 10.dp,
                     defaultElevation = 7.dp

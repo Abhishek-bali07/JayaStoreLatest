@@ -35,7 +35,7 @@ fun PinView(
     digitCount: Int = 4,
     type: Int = PIN_VIEW_TYPE_BORDER,
 ) {
-    BasicTextField( modifier = Modifier.padding(horizontal = 5.dp), value = pinText,
+    BasicTextField( modifier = Modifier.padding(horizontal = 5.dp, vertical = 5.dp), value = pinText,
         onValueChange = onPinTextChange,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         cursorBrush = SolidColor(Color.Black),

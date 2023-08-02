@@ -1,7 +1,9 @@
 package com.jaya.app.store.presentation.ui.view_models
 
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -111,6 +113,10 @@ class AddProductViewModel  @Inject constructor(
         initialData = false
     )
 
+
+    var quotationsLoad by mutableStateOf(false)
+        private set
+
     init {
         initialSupplierData()
         initialGstData()
@@ -185,6 +191,15 @@ class AddProductViewModel  @Inject constructor(
     private  fun initialGstData() {
         addProductUseCase.GstDetails().onEach {
             when (it.type) {
+                EmitType.Loading ->{
+                    it.value?.apply {
+                        castValueToRequiredTypes<Boolean>()?.let {
+                            quotationsLoad  = it
+                        }
+                    }
+
+                }
+
                 EmitType.gstDetails-> {
                     it.value?.castListToRequiredTypes<Gst>()?.let { data->
                        _gstDetails.update { data }

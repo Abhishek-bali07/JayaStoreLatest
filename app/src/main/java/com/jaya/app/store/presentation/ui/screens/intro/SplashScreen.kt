@@ -109,7 +109,7 @@ fun SplashScreen(
                             strokeWidth = 1.dp,
                             modifier = Modifier.size(48.dp)
                         )
-                        R.string.app_name.Text(style = MaterialTheme.typography.body1)
+                        R.string.loading.Text(style = MaterialTheme.typography.body1)
                     }
 
                     false -> {

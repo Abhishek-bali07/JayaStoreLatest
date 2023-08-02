@@ -5,7 +5,7 @@ import com.jaya.app.store.core.common.enums.EmitType
 
 
 data class Data(
-    val type: EmitType,
+    val type: EmitType = EmitType.NONE,
     val value: Any?
 )
 

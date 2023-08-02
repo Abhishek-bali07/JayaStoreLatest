@@ -101,7 +101,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun DashBoardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
-){
+) {
     val listState = rememberLazyListState()
     var rowSize by remember {
         mutableStateOf(IntSize.Zero)
@@ -109,12 +109,12 @@ fun DashBoardScreen(
     val screenWidthDp = LocalConfiguration.current.screenWidthDp.dp
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
 
-    val dashboardDrawerState = androidx.compose.material3.rememberDrawerState(initialValue = DrawerValue.Closed)
+    val dashboardDrawerState =
+        androidx.compose.material3.rememberDrawerState(initialValue = DrawerValue.Closed)
     val uiScope = rememberCoroutineScope()
     ModalNavigationDrawer(
         drawerContent = {
-            DashboardDrawerSection(
-                drawerMenus = viewModel.drawerMenus.collectAsState(),
+            DashboardDrawerSection(drawerMenus = viewModel.drawerMenus.collectAsState(),
                 onSelect = viewModel::onDrawerMenuClicked,
                 viewModel = viewModel,
                 closeDrawer = {
@@ -123,27 +123,26 @@ fun DashBoardScreen(
                             DrawerValue.Closed -> {}
                             DrawerValue.Open -> {
                                 dashboardDrawerState.animateTo(
-                                    targetValue = DrawerValue.Closed,
-                                    anim = tween(500)
+                                    targetValue = DrawerValue.Closed, anim = tween(500)
                                 )
                             }
                         }
                     }
                 })
         }, drawerState = dashboardDrawerState
-    ){
+    ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            drawerContent = {SideBarContent(viewModel = viewModel)},
+            drawerContent = { SideBarContent(viewModel = viewModel) },
             drawerScrimColor = Color.Black.copy(alpha = .5f),
             drawerBackgroundColor = Color.White,
             scaffoldState = viewModel.scaffoldState,
             drawerGesturesEnabled = viewModel.drawerGuestureState.value,
-            topBar = { AppBarContent(viewModel,dashboardDrawerState,uiScope) },
+            topBar = { AppBarContent(viewModel, dashboardDrawerState, uiScope) },
 
 
-            ) {paddingValues ->
-            if(viewModel.quotationsLoading){
+            ) { paddingValues ->
+            if (viewModel.quotationsLoading) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -162,7 +161,7 @@ fun DashBoardScreen(
                         R.drawable.jayalogo.Image(modifier = Modifier.size(100.dp))
                     }
                 }
-            }else {
+            } else {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -210,18 +209,19 @@ fun DashBoardScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Surface(modifier = Modifier.clickable { viewModel.addProduct() }
-                                .padding(10.dp)
-                                .width(screenWidthDp * .44f)
-                                .height(screenHeightDp * .06f)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(color = Color(0xffFFEB56)),
+                            Surface(
+                                modifier = Modifier
+                                    .clickable { viewModel.addProduct() }
+                                    .padding(10.dp)
+                                    .width(screenWidthDp * .44f)
+                                    .height(screenHeightDp * .06f)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(color = Color(0xffFFEB56)),
                                 /*onClick = {
                                     viewModel.addProduct()
 
                                 }*/
-                            )
-                            {
+                            ) {
                                 Row(
                                     modifier = Modifier.background(color = Color(0xffFFEB56)),
                                     horizontalArrangement = Arrangement.SpaceAround,
@@ -244,24 +244,26 @@ fun DashBoardScreen(
                                     Icon(
                                         modifier = Modifier,
                                         painter = R.drawable.plus.resourceImage(),
-                                        contentDescription = "null", tint = Color.Black
+                                        contentDescription = "null",
+                                        tint = Color.Black
                                     )
                                 }
 
                             }
 
-                            Surface(modifier = Modifier.clickable { viewModel.issueProduct() }
-                                .padding(10.dp)
-                                .width(screenWidthDp * .60f)
-                                .height(screenHeightDp * .06f)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(color = Color(0xffFFEB56)),
+                            Surface(
+                                modifier = Modifier
+                                    .clickable { viewModel.issueProduct() }
+                                    .padding(10.dp)
+                                    .width(screenWidthDp * .60f)
+                                    .height(screenHeightDp * .06f)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(color = Color(0xffFFEB56)),
                                 /*onClick = {
                                     viewModel.issueProduct()
                                 }*/
 
-                            )
-                            {
+                            ) {
                                 Row(
                                     modifier = Modifier.background(color = Color(0xffFFEB56)),
                                     horizontalArrangement = Arrangement.SpaceAround,
@@ -284,15 +286,15 @@ fun DashBoardScreen(
                                     Icon(
                                         modifier = Modifier,
                                         painter = R.drawable.plus.resourceImage(),
-                                        contentDescription = "null", tint = Color.Black
+                                        contentDescription = "null",
+                                        tint = Color.Black
                                     )
                                 }
 
                             }
                         }
 
-                        StatusSection(viewModel)
-                        /*  Spacer(modifier = Modifier.height(10.dp))*/
+                        StatusSection(viewModel)/*  Spacer(modifier = Modifier.height(10.dp))*/
                         Divider(
                             color = Color.LightGray, modifier = Modifier
                                 .fillMaxWidth()
@@ -317,8 +319,8 @@ fun DashboardDrawerSection(
     drawerMenus: State<List<DrawerMenuItem>>,
     onSelect: (Int, DrawerMenuItem) -> Unit,
     viewModel: DashboardViewModel,
-    closeDrawer: () -> Unit)
-{
+    closeDrawer: () -> Unit
+) {
     val coroutineScope = rememberCoroutineScope()
 
     ModalDrawerSheet(
@@ -332,10 +334,11 @@ fun DashboardDrawerSection(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Image(modifier = Modifier.size(150.dp),
-                painter =R.drawable.jayalogo.resourceImage() ,
-                contentDescription = "")
-
+            Image(
+                modifier = Modifier.size(150.dp),
+                painter = R.drawable.jayalogo.resourceImage(),
+                contentDescription = ""
+            )
 
 
         }
@@ -368,77 +371,71 @@ fun DashboardDrawerSection(
 
 @Composable
 fun FeatureSection(products: List<Product>, viewModel: DashboardViewModel) {
-   Column(
-       modifier = Modifier.fillMaxSize(),
-       verticalArrangement = Arrangement.Center,
-       horizontalAlignment = Alignment.CenterHorizontally
-   ) {
-            if (viewModel.isshowSearch.value)
-                OutlinedTextField(
-                    value = viewModel.searchTxt.value,
-                    onValueChange = viewModel::onChangeSearchTxt,
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (viewModel.isshowSearch.value) OutlinedTextField(
+            value = viewModel.searchTxt.value,
+            onValueChange = viewModel::onChangeSearchTxt,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 5.dp),
+            textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = "",
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 5.dp),
-                    textStyle = TextStyle(color = Color.Black, fontSize = 18.sp),
-                    leadingIcon = {
-                      Icon(
-                            Icons.Default.Search,
+                        .padding(15.dp)
+                        .size(24.dp)
+                )
+            },
+            trailingIcon = {
+                if (viewModel.searchTxt.value != "") {
+                    IconButton(onClick = {
+                        viewModel.searchTxt.value = ""
+                        viewModel.products.clear()
+                        viewModel.products.addAll(viewModel.searchProduct.toList())
+                        //viewModel.getStockData()
+                    }) {
+                        androidx.compose.material3.Icon(
+                            Icons.Default.Close,
                             contentDescription = "",
                             modifier = Modifier
                                 .padding(15.dp)
                                 .size(24.dp)
                         )
-                    },
-                    trailingIcon = {
-                        if (viewModel.searchTxt.value != "") {
-                            IconButton(
-                                onClick = {
-                                    viewModel.searchTxt.value = ""
-
-                                }
-                            ) {
-                                androidx.compose.material3.Icon(
-                                    Icons.Default.Close,
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .padding(15.dp)
-                                        .size(24.dp)
-                                )
-                            }
-                        }
-                    },
-                    singleLine = true,
-                    shape = RectangleShape,
-                    colors = TextFieldDefaults.textFieldColors(
-                        textColor = Color.White,
-                        cursorColor = Color.White,
-                        leadingIconColor = Color.White,
-                        trailingIconColor = Color.White,
-                        backgroundColor = Color.LightGray,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    )
-                )
-            LazyVerticalGrid(columns = GridCells.Fixed(3),
-                contentPadding = PaddingValues(
-                    start = 7.5.dp,
-                    end = 7.5.dp,
-                    bottom = 20.dp,
-                    top = 10.dp
-                ),
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
-            ){
-                items(products.size){
-                    ProductItem(product = products[it], viewModel)
+                    }
                 }
+            },
+            singleLine = true,
+            shape = RectangleShape,
+            colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.White,
+                cursorColor = Color.White,
+                leadingIconColor = Color.White,
+                trailingIconColor = Color.White,
+                backgroundColor = Color.LightGray,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
+        )
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3), contentPadding = PaddingValues(
+                start = 7.5.dp, end = 7.5.dp, bottom = 20.dp, top = 10.dp
+            ), modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
+        ) {
+            items(products.size) {
+                ProductItem(product = products[it], viewModel)
             }
-   }
+        }
+    }
 }
-
 
 
 @Composable
@@ -458,8 +455,7 @@ fun StatusSection(viewModel: DashboardViewModel) {
             text = "Product List",
             color = Color.Black,
             style = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 16.sp, fontWeight = FontWeight.Bold
 
             )
         )
@@ -467,26 +463,25 @@ fun StatusSection(viewModel: DashboardViewModel) {
         Row(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 10.dp), horizontalArrangement = Arrangement.End
+                .padding(horizontal = 10.dp),
+            horizontalArrangement = Arrangement.End
         ) {
-                IconButton(
-                    onClick = {
-                        viewModel.isshowSearch.value = ! viewModel.isshowSearch.value
-                    }) {
-                    Icon(
-                        painter = R.drawable.search.resourceImage(),
-                        contentDescription ="" ,
-                        tint = Color.Black,
-                        modifier = Modifier.size(15.dp)
-                    )
-                }
+            IconButton(onClick = {
+                viewModel.isshowSearch.value = !viewModel.isshowSearch.value
+            }) {
+                Icon(
+                    painter = R.drawable.search.resourceImage(),
+                    contentDescription = "",
+                    tint = Color.Black,
+                    modifier = Modifier.size(15.dp)
+                )
+            }
 
 
-            IconButton(
-                onClick = { /*TODO*/ }) {
+            IconButton(onClick = { /*TODO*/ }) {
                 Icon(
                     painter = R.drawable.filter.resourceImage(),
-                    contentDescription ="" ,
+                    contentDescription = "",
                     tint = Color.Black,
                     modifier = Modifier.size(15.dp)
                 )
@@ -496,62 +491,57 @@ fun StatusSection(viewModel: DashboardViewModel) {
 }
 
 
-
 @Composable
 fun ProductItem(
-    product: Product,
-    viewModel: DashboardViewModel
+    product: Product, viewModel: DashboardViewModel
 ) {
     Card(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .height(150.dp),
-        elevation = 4.dp
-    ){
-        Column(modifier = Modifier
-            .padding(5.dp), verticalArrangement = Arrangement.SpaceBetween,
+            .height(150.dp), elevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier.padding(5.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
 
             ) {
             Row(modifier = Modifier.align(alignment = Alignment.Start)) {
                 Text(
-                    text = product.productQty,
-                    style = TextStyle(
-                        color = Color(0xff036509),fontSize = 10.sp,)
+                    text = product.productQty, style = TextStyle(
+                        color = Color(0xff036509), fontSize = 10.sp,
+                    )
                 )
             }
 
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(product.productImage)
-                    .crossfade(enable = true)
-                    .size(200)
-                    .build(),
+                model = ImageRequest.Builder(LocalContext.current).data(product.productImage)
+                    .crossfade(enable = true).size(200).build(),
                 contentDescription = null,
                 modifier = Modifier
                     .padding(5.dp)
                     .align(alignment = Alignment.CenterHorizontally)
             )
 
-            Column(modifier = Modifier.padding(horizontal = 10.dp),
+            Column(
+                modifier = Modifier.padding(horizontal = 10.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = product.productTitle, maxLines = 1,
-                    style = TextStyle(
-                        color = Color(0xff222222),fontSize = 12.sp, fontWeight = FontWeight.W500)
+                    text = product.productTitle, maxLines = 1, style = TextStyle(
+                        color = Color(0xff222222), fontSize = 12.sp, fontWeight = FontWeight.W500
+                    )
                 )
 
 
                 Text(
-                    text = product.productValue,
-                    style = TextStyle(
-                        color = Color(0xffFF4155),fontSize = 10.sp,)
+                    text = product.productValue, style = TextStyle(
+                        color = Color(0xffFF4155), fontSize = 10.sp,
+                    )
                 )
-            }
-            /*Row(modifier = Modifier
+            }/*Row(modifier = Modifier
                 .align(alignment = Alignment.CenterHorizontally)
                 .padding(5.dp)) {
                 Text(
@@ -560,9 +550,6 @@ fun ProductItem(
                         color = Color(0xffFF4155),fontSize = 10.sp,), textAlign = TextAlign.Center
                 )
             }*/
-
-
-
 
 
         }
@@ -576,7 +563,7 @@ fun CardItem(
     number: String,
     color: Color,
     rowSize: IntSize,
-){
+) {
     Card(
         modifier = Modifier
             .width(with(LocalDensity.current) {
@@ -587,33 +574,24 @@ fun CardItem(
         backgroundColor = color,
         elevation = 8.dp,
         shape = RoundedCornerShape(12.dp),
-    ){
+    ) {
         Column(
-            modifier = Modifier
-                .fillMaxHeight(),
+            modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "${number ?: 0}",
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                modifier = Modifier
-                )
+            Text(
+                text = "${number ?: 0}", style = TextStyle(
+                    color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Bold
+                ), modifier = Modifier
+            )
 
 
             Text(
-                text = stringResource(id = name),
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                lineHeight = 24.sp,
-                modifier = Modifier
-                )
+                text = stringResource(id = name), style = TextStyle(
+                    color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold
+                ), lineHeight = 24.sp, modifier = Modifier
+            )
 
         }
     }
@@ -624,7 +602,8 @@ fun CardItem(
 fun AppBarContent(
     viewModel: DashboardViewModel,
     dashboardDrawerState: DrawerState,
-    uiScope: CoroutineScope,) {
+    uiScope: CoroutineScope,
+) {
     val uiScope = rememberCoroutineScope()
 
     TopAppBar(
@@ -662,13 +641,12 @@ fun AppBarContent(
 
 
         IconButton(onClick = {
-            uiScope.launch {
-            }
+            uiScope.launch {}
 
         }) {
             Icon(
                 painter = R.drawable.bell.resourceImage(),
-                contentDescription ="" ,
+                contentDescription = "",
                 tint = Color.Black,
                 modifier = Modifier.size(35.dp)
             )
@@ -677,7 +655,6 @@ fun AppBarContent(
 
     }
 }
-
 
 
 @Composable
@@ -697,8 +674,7 @@ private fun SideBarContent(viewModel: DashboardViewModel) {
     val uiScope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Top
+        modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Top
     ) {
 
         DrawerMenuLogoutItem(viewModel, uiScope)
@@ -707,9 +683,8 @@ private fun SideBarContent(viewModel: DashboardViewModel) {
 }
 
 
-
 @Composable
-private  fun DrawerMenuLogoutItem(viewModel: DashboardViewModel, uiScope: CoroutineScope) {
+private fun DrawerMenuLogoutItem(viewModel: DashboardViewModel, uiScope: CoroutineScope) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

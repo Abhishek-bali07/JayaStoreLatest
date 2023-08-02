@@ -1,7 +1,9 @@
 package com.jaya.app.store.presentation.ui.view_models
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -38,7 +40,8 @@ class IssueProductViewModel @Inject constructor(
 
     val selectedProduct = mutableStateOf<ItemProduct?>(null)
 
-
+    var pageLoading by mutableStateOf(false)
+        private set
 
 
     val selectedItem = mutableStateOf<SectionData?>(null)
@@ -160,9 +163,17 @@ class IssueProductViewModel @Inject constructor(
     }
 
 
-    private  fun initialProductData() {
+    fun initialProductData() {
        productIssueUseCase.Products().onEach {
             when (it.type) {
+                EmitType.Loading ->{
+                    it.value?.apply {
+                        castValueToRequiredTypes<Boolean>()?.let {
+                            pageLoading = it
+                        }
+                    }
+                }
+
                 EmitType.productDetails -> {
                     it.value?.castListToRequiredTypes<ItemProduct>()?.let { data->
                         searchProduct.clear()

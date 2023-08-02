@@ -24,6 +24,8 @@ enum class EmitType {
     productDetails,
     sectionDetails,
     subsectionDetails,
+    NONE,
+    NAVIGATE,
 
 
 }
