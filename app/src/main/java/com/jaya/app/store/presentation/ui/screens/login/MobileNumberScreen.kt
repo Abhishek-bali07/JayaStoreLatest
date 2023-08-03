@@ -57,7 +57,7 @@ private fun ColumnScope.MobileNumberInputSection(mobileViewModel: MobileViewMode
                 .padding(vertical = 10.dp),
             textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Black,
-                backgroundColor = Color.Black.copy(alpha = .2f)
+                backgroundColor = Color.Black.copy(alpha = .1f)
             )
         )
         AppButton(

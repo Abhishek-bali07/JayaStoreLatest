@@ -179,7 +179,7 @@ class DashboardViewModel @Inject constructor(
                             it.value?.castValueToRequiredTypes<Destination.NoArgumentsDestination>()?.let { destination ->
                                 appNavigator.tryNavigateTo(
                                     destination(),
-                                    popUpToRoute = "",
+                                    popUpToRoute = Destination.OtpScreen(),
                                     inclusive = true,
                                     isSingleTop = true
                                 )

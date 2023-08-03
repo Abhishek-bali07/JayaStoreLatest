@@ -1,6 +1,7 @@
 package com.jaya.app.store.presentation.ui.screens.issueProduct
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -148,7 +150,7 @@ fun AddIssueSection(
 
                         Surface(
                             shape = RoundedCornerShape(4.dp),
-                            border = BorderStroke(1.dp, Color.LightGray),
+                            border = BorderStroke(2.dp, Color.LightGray),
                             modifier = Modifier
                                 .width(screenWidthDp * .60f)
                                 .height(55.dp),
@@ -251,7 +253,11 @@ fun AddIssueSection(
                         modifier = Modifier
                             .padding(horizontal = 5.dp)
                             .width(screenWidthDp * .30f)
-                            .height(55.dp),
+                            .height(55.dp)
+                            .border(
+                                width = 2.dp,
+                                color = Color.LightGray,
+                            ),
                         value =viewModel.itemNumber.value,
                         placeholder = {
                             Text(
@@ -275,7 +281,11 @@ fun AddIssueSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 22.dp, vertical = 10.dp)
-                        .height(height = 55.dp),
+                        .height(height = 55.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color.LightGray,
+                        ),
                     value =viewModel.orderBy.value,
                     placeholder = {
                         Text(
@@ -302,7 +312,11 @@ fun AddIssueSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 22.dp, vertical = 5.dp)
-                        .size(height = 55.dp, width = 300.dp),
+                        .size(height = 55.dp, width = 300.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color.LightGray,
+                        ),
                     value =viewModel.takingName.value,
                     maxLines = 1,
                     placeholder = {
@@ -327,8 +341,13 @@ fun AddIssueSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 22.dp, vertical = 5.dp)
-                        .size(height = 55.dp, width = 300.dp),
-                    value =viewModel.where.value, maxLines = 1,
+                        .size(height = 55.dp, width = 300.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color.LightGray,
+                        ),
+                    value =viewModel.where.value,
+                    maxLines = 1,
                     placeholder = {
                         Text(
                             text = "Where", style = TextStyle(
@@ -359,7 +378,7 @@ fun AddIssueSection(
                 ) {
                     Surface(
                         shape = RoundedCornerShape(4.dp),
-                        border = BorderStroke(1.dp, Color.LightGray),
+                        border = BorderStroke(2.dp, Color.LightGray),
                         modifier = Modifier
                             .width(screenWidthDp * .90f)
                             .height(55.dp),
@@ -458,7 +477,7 @@ fun AddIssueSection(
 
                         Surface(
                             shape = RoundedCornerShape(4.dp),
-                            border = BorderStroke(1.dp, Color.LightGray),
+                            border = BorderStroke(2.dp, Color.LightGray),
                             modifier = Modifier
                                 .width(screenWidthDp * .45f)
                                 .height(55.dp),
@@ -508,6 +527,7 @@ fun AddIssueSection(
                             }
 
                             DropdownMenu(modifier = Modifier.width(screenWidthDp * .45f),
+//                                offset = DpOffset(-15.dp,0.dp),
                                 expanded =  viewModel.isExpandedSection.value,
                                 onDismissRequest = {  viewModel.isExpandedSection.value = false })
                             {
@@ -566,7 +586,7 @@ fun AddIssueSection(
 
                         Surface(
                             shape = RoundedCornerShape(4.dp),
-                            border = BorderStroke(1.dp, Color.LightGray),
+                            border = BorderStroke(2.dp, Color.LightGray),
                             modifier = Modifier
                                 .width(screenWidthDp * .45f)
                                 .height(55.dp),

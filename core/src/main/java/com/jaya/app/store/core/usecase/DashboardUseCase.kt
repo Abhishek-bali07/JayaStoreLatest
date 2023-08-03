@@ -50,7 +50,7 @@ class DashboardUseCase @Inject constructor(
                     EmitType.NAVIGATE,
                    appNavigator.tryNavigateTo(
                        route = Destination.MobileNumberScreen(),
-                       popUpToRoute = "",
+                       popUpToRoute = Destination.OtpScreen(),
                        inclusive = true,
                        isSingleTop = true
                    )

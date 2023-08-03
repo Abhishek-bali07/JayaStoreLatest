@@ -1,6 +1,7 @@
 package com.jaya.app.store.presentation.ui.screens.addProduct
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -141,7 +142,11 @@ fun AddProductSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 22.dp, vertical = 10.dp)
-                        .size(height = 55.dp, width = 300.dp),
+                        .size(height = 55.dp, width = 300.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color.LightGray,
+                        ),
                     value =addProductViewModel.productName.value,
                     placeholder = {
                         Text(
@@ -164,7 +169,11 @@ fun AddProductSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 22.dp)
-                        .size(height = 55.dp, width = 300.dp),
+                        .size(height = 55.dp, width = 300.dp)
+                        .border(
+                            width = 2.dp,
+                            color = Color.LightGray,
+                        ),
                     value =addProductViewModel.brandName.value,
                     placeholder = {
                         Text(
@@ -191,7 +200,7 @@ fun AddProductSection(
                 ) {
                     Surface(
                         shape = RoundedCornerShape(4.dp),
-                        border = BorderStroke(1.dp, Color.LightGray),
+                        border = BorderStroke(2.dp, Color.LightGray),
                         modifier = Modifier
                             .width(screenWidthDp * .90f)
                             .height(55.dp),
@@ -269,7 +278,11 @@ fun AddProductSection(
                         modifier = Modifier
                             .width(screenWidthDp * .30f)
                             .padding(horizontal = 5.dp)
-                            .height(height = 55.dp),
+                            .height(height = 55.dp)
+                            .border(
+                                width = 2.dp,
+                                color = Color.LightGray,
+                            ),
                         value =addProductViewModel.basic.value,
                         placeholder = {
                             Text(
@@ -296,7 +309,7 @@ fun AddProductSection(
                     ) {
                         Surface(
                             shape = RoundedCornerShape(4.dp),
-                            border = BorderStroke(1.dp, Color.LightGray),
+                            border = BorderStroke(2.dp, Color.LightGray),
                             modifier = Modifier
                                 .width(screenWidthDp * .35f)
                                 .height(55.dp),
@@ -372,7 +385,11 @@ fun AddProductSection(
                         modifier = Modifier
                             .width(screenWidthDp * .30f)
                             .padding(horizontal = 5.dp)
-                            .height(height = 55.dp),
+                            .height(height = 55.dp)
+                            .border(
+                                width = 2.dp,
+                                color = Color.LightGray,
+                            ),
                         value =addProductViewModel.rate.value,
                         placeholder = {
                             Text(
@@ -404,7 +421,11 @@ fun AddProductSection(
                         modifier = Modifier
                             .width(screenWidthDp * .50f)
                             .padding(horizontal = 5.dp)
-                            .height(height = 55.dp),
+                            .height(height = 55.dp)
+                            .border(
+                                width = 2.dp,
+                                color = Color.LightGray,
+                            ),
                         value =addProductViewModel.quantity.value,
                         placeholder = {
                             Text(
@@ -428,7 +449,11 @@ fun AddProductSection(
                         modifier = Modifier
                             .width(screenWidthDp * .50f)
                             .padding(horizontal = 5.dp)
-                            .height(height = 55.dp),
+                            .height(height = 55.dp)
+                            .border(
+                                width = 2.dp,
+                                color = Color.LightGray,
+                            ),
                         value =addProductViewModel.state.value,
                         placeholder = {
                             Text(
